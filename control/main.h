@@ -26,8 +26,6 @@ struct Main{
 
 	Posedge_trigger autonomous_start;
 
-	//Move into PANEL.H when OI ready
-
 	Posedge_toggle piston;
 	
 	struct Nudge{
@@ -35,8 +33,7 @@ struct Main{
 		Countdown_timer timer;
 	};
 	Nudge nudges[6];//Left, Right, Forward, Backward, Clockwise, Counter-clockwise
-	Nudge back_turns[2];//Backwards and left, Backwards and right
-	
+		
 	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail&);
 	Main();
 	Robot_outputs operator()(Robot_inputs,std::ostream& = std::cerr);

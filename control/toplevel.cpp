@@ -7,7 +7,6 @@
 using namespace std;
 
 Toplevel::Toplevel():
-	kicker(0),
 	can_grabber(0,4),
 	input_reader(this),
 	estimator(this),
@@ -133,7 +132,6 @@ ostream& operator<<(ostream& o,Toplevel::Goal g){
 }
 
 Toplevel::Status::Status():
-	kicker(Kicker::Status::IN),
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_,Motor_check::Status::OK_},
 		Drivebase::Piston::FULL
@@ -311,7 +309,6 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 			Lift::Status_detail::error(),
 			Lift::Status_detail::error()
 		},
-		Kicker::Status_detail{},
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{},
 		Can_grabber::Status_detail{Can_grabber::Status::INITIAL, Lift::Status_detail::error()},
@@ -330,7 +327,6 @@ set<Toplevel::Status> examples(Toplevel::Status*){ return {Toplevel::Status{}}; 
 set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
 		Combo_lift::Input(),
-		Kicker::Input(),
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
 		Can_grabber::Input{Lift::Input{0,0,0,0},0},
@@ -342,7 +338,6 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 set<Toplevel::Output> examples(Toplevel::Output*){
 	Toplevel::Output a;
 	a.can_grabber=Can_grabber::Output::LOCK;
-	a.kicker=Kicker::Output::OUT;
 	/*return {Toplevel::Output{
 		Lift::Output{},
 		Lift::Output{},

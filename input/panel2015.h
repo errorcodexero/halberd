@@ -3,7 +3,6 @@
 
 #include "../util/maybe.h"
 #include "../control/lift.h"
-#include "../control/kicker.h"
 #include "../util/interface.h"
 #include "../control/combo_lift.h"
 

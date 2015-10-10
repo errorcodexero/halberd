@@ -57,9 +57,6 @@ Toplevel::Goal Main::teleop(
 	static const float Y_NUDGE_POWER=.2;
 	static const float ROTATE_NUDGE_POWER=.5;
 
-	static const float BACK_TURN_POWER=.2;//Special auto move-backwards-and-turn -- not used anymore
-	static const float BACK_MOVE_POWER=.5;
-	
 	static const bool SLOW_TURNING=0;//Slows drive turning
 	
 	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER];
@@ -71,13 +68,10 @@ Toplevel::Goal Main::teleop(
 
 	if(!nudges[2].timer.done())goal.y=-Y_NUDGE_POWER;
 	else if(!nudges[3].timer.done())goal.y=Y_NUDGE_POWER;
-	else if(!back_turns[0].timer.done()||!back_turns[1].timer.done())goal.y=BACK_MOVE_POWER;
 	else goal.y=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
-
+	
 	if(!nudges[4].timer.done())goal.theta=-ROTATE_NUDGE_POWER;
 	else if(!nudges[5].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
-	else if(!back_turns[0].timer.done())goal.theta=BACK_TURN_POWER;
-	else if(!back_turns[1].timer.done())goal.theta=-BACK_TURN_POWER;
 	else goal.theta=-set_drive_speed(main_joystick,4,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER],SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
 
 	const bool normal_nudge_enable=turbo_button<.25;			
@@ -94,19 +88,6 @@ Toplevel::Goal Main::teleop(
 	
 	//auto nudge!
 	if(!normal_nudge_enable){
-		/*todo: add the part where we actually read the sensors
-		if(	
-			(main_joystick.button[NUDGE_LEFT_BUTTON]&&in.digital_io.in[8]==Digital_in::_0)||
-			(main_joystick.button[NUDGE_CW_BUTTON]&&in.digital_io.in[9]==Digital_in::_0)
-		){
-			goal.x=X_NUDGE_POWER;
-		}
-		if(
-			(main_joystick.button[NUDGE_RIGHT_BUTTON]&&in.digital_io.in[7]==Digital_in::_0)||
-			(main_joystick.button[NUDGE_CCW_BUTTON]&&in.digital_io.in[9]==Digital_in::_0)
-		){
-			goal.x=-X_NUDGE_POWER;
-		}*/
 		if(main_joystick.button[NUDGE_FWD_BUTTON]){
 			//kick_and_lift=0;
 			if(piston.get()){
@@ -130,13 +111,6 @@ Toplevel::Goal Main::teleop(
 				//nada
 			}
 		}
-	}
-	
-	//static const unsigned int back_turn_buttons[2]={Gamepad_button::BACK,Gamepad_button::START};
-	for(int i=0;i<2;i++){
-		bool start=0;//back_turns[i].trigger(main_joystick.button[back_turn_buttons[i]]);
-		if(start)back_turns[i].timer.set(1);
-		back_turns[i].timer.update(in.now,1);
 	}
 	
 	goals.drive=goal;
