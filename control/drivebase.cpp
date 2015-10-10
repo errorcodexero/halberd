@@ -8,12 +8,9 @@ using namespace std;
 
 unsigned pdb_location(Drivebase::Motor m){
         #define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
-        X(LEFT1,12)
-        X(LEFT2,13)
-        X(RIGHT1,14)
-        X(RIGHT2,15)
-        X(CENTER1,2)
-        X(CENTER2,3)
+        //WILL NEED CORRECT VALUES
+	X(LEFT,12)
+        X(RIGHT,13)
         #undef X
         assert(0);
         //assert(m>=0 && m<Drivebase::MOTORS);
@@ -26,19 +23,18 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 	auto set=[&](unsigned index,Digital_in value){
 		all.digital_io.in[index]=value;
 	};
-	auto encoder=[&](unsigned a,unsigned b,Encoder_info e){
-		set(a,e.first);
-		set(b,e.second);
+	auto encoder=[&](unsigned a,Encoder_info e){
+		set(a,e);
 	};
-	encoder(0,1,in.left);
-	encoder(2,3,in.right);
-	encoder(4,5,in.center);
+	//WILL NEED CORRECT VALUES
+	encoder(0,in.left);
+	encoder(1,in.right);
 	return all;
 }
 
 Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs in)const{
-	auto encoder_info=[&](unsigned a,unsigned b){
-		return make_pair(in.digital_io.in[a],in.digital_io.in[b]);
+	auto encoder_info=[&](unsigned a){
+		return in.digital_io.in[a];
 	};
 	return Drivebase::Input{
 		[&](){
@@ -49,17 +45,10 @@ Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs in)const{
 			}
 			return r;
 		}(),
-		encoder_info(0,1),
-		encoder_info(2,3),
-		encoder_info(4,5)
+		//WILL NEED CORRECT VALUES
+		encoder_info(0),
+		encoder_info(1)
 	};
-}
-
-ostream& operator<<(ostream& o,Drivebase::Piston a){
-	#define X(NAME) if(a==Drivebase::Piston::NAME) return o<<""#NAME;
-	PISTON_STATES
-	#undef X
-	assert(0);
 }
 
 IMPL_STRUCT(Drivebase::Status::Status,DRIVEBASE_STATUS)
@@ -74,10 +63,8 @@ set<Drivebase::Status> examples(Drivebase::Status*){
 	return {Drivebase::Status{
 		array<Motor_check::Status,Drivebase::MOTORS>{
 			Motor_check::Status::OK_,
-			Motor_check::Status::OK_,
 			Motor_check::Status::OK_
-		},
-		Drivebase::Piston::FULL
+		}
 	}};
 }
 
@@ -107,16 +94,15 @@ CMP_OPS(Drivebase::Output,DRIVEBASE_OUTPUT)
 
 set<Drivebase::Output> examples(Drivebase::Output*){
 	return {
-		Drivebase::Output{0,0,0,1},
-		Drivebase::Output{1,1,0,0}
+		Drivebase::Output{0,0},
+		Drivebase::Output{1,1}
 	};
 }
 
 set<Drivebase::Input> examples(Drivebase::Input*){
 	auto d=Digital_in::_0;
-	auto p=make_pair(d,d);
 	return {Drivebase::Input{
-		{0,0,0},p,p,p
+		{0,0},d,d
 	}};
 }
 
@@ -125,7 +111,7 @@ Drivebase::Status_detail Drivebase::Estimator::get()const{
 	for(unsigned i=0;i<a.size();i++){
 		a[i]=motor_check[i].get();
 	}
-	return Status{a,piston};
+	return Status{a};
 }
 
 ostream& operator<<(ostream& o,Drivebase::Output_applicator){
@@ -140,17 +126,11 @@ ostream& operator<<(ostream& o,Drivebase const& a){
 
 double get_output(Drivebase::Output out,Drivebase::Motor m){
 	#define X(NAME,POSITION) if(m==Drivebase::NAME) return out.POSITION;
-	X(LEFT1,l)
-	X(LEFT2,l)
-	X(RIGHT1,r)
-	X(RIGHT2,r)
-	X(CENTER1,c)
-	X(CENTER2,c)
+	X(LEFT,l)
+	X(RIGHT,r)
 	#undef X
 	assert(0);
 }
-
-Drivebase::Estimator::Estimator():piston_last(0),piston(Piston::EMPTYING){}
 
 void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output out){
 	for(unsigned i=0;i<MOTORS;i++){
@@ -159,41 +139,20 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 		auto set_power_level=get_output(out,m);
 		motor_check[i].update(now,current,set_power_level);
 	}
-
-	if(out.piston==piston_last){
-		piston_timer.update(now,1);
-		if(piston_timer.done()){
-			if(piston_last){
-				piston=Piston::FULL;
-			}else{
-				piston=Piston::EMPTY;
-			}
-		}
-	}else{
-		if(out.piston){
-			piston=Piston::FILLING;
-		}else{
-			piston=Piston::EMPTYING;
-		}
-		piston_last=out.piston;
-		piston_timer.set(.2);//total guess
-	}
 }
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
+	//WILL NEED CORRECT VALUES
 	robot.pwm[0]=-pwm_convert(b.l);
 	robot.pwm[1]=pwm_convert(b.r);
-	robot.pwm[2]=pwm_convert(b.c);
-	robot.solenoid[1]=b.piston;
 	return robot;
 }
 
 Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)const{
+	//WILL NEED CORRECT VALUES
 	return Drivebase::Output{
 		-from_pwm(robot.pwm[0]),
-		from_pwm(robot.pwm[1]),
-		from_pwm(robot.pwm[2]),
-		robot.solenoid[1]
+		from_pwm(robot.pwm[1])
 	};
 }
 
@@ -215,30 +174,12 @@ bool operator==(Drivebase const& a,Drivebase const& b){
 
 bool operator!=(Drivebase const& a,Drivebase const& b){ return !(a==b); }
 
-Drivebase::Output control(Drivebase::Status status,Drivebase::Goal goal){
+Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
 	double l=goal.y+goal.theta;
 	double r=goal.y-goal.theta;
 	auto m=max(1.0,max(fabs(l),fabs(r)));
 
-	auto main_wheel_portion=max(fabs(l),fabs(r));
-	auto strafe_portion=fabs(goal.x);
-	auto mostly_stationary=max(main_wheel_portion,strafe_portion)<.1;
-	bool piston=[=]()->bool{
-		if(mostly_stationary){
-			switch(status.piston){
-				case Drivebase::Piston::FULL:
-				case Drivebase::Piston::FILLING:
-					return 1;
-				case Drivebase::Piston::EMPTY:
-				case Drivebase::Piston::EMPTYING:
-					return 0;
-				default: assert(0);
-			}
-		}
-		return strafe_portion>=main_wheel_portion/2;
-	}();
-
-	return Drivebase::Output{l/m,r/m,goal.x,piston};
+	return Drivebase::Output{l/m,r/m};
 }
 
 Drivebase::Status status(Drivebase::Status a){ return a; }

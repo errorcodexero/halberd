@@ -9,16 +9,16 @@
 #include "../util/countdown_timer.h"
 
 struct Drivebase{
-	enum Motor{LEFT1,LEFT2,RIGHT1,RIGHT2,CENTER1,CENTER2,MOTORS};
+	enum Motor{LEFT,RIGHT,MOTORS};
 
 	//This should eventually have counters or something
-	typedef std::pair<Digital_in,Digital_in> Encoder_info;
+	//No it shouldn't
+	typedef Digital_in Encoder_info;
 
 	#define DRIVEBASE_INPUT(X) \
 		X(SINGLE_ARG(std::array<double,MOTORS>),current)\
 		X(Encoder_info,left)\
-		X(Encoder_info,right)\
-		X(Encoder_info,center)
+		X(Encoder_info,right)
 	DECLARE_STRUCT(Input,DRIVEBASE_INPUT)
 
 	struct Input_reader{
@@ -29,33 +29,17 @@ struct Drivebase{
 
 	#define DRIVEBASE_OUTPUT(X)\
 		X(double,l)\
-		X(double,r)\
-		X(double,c)\
-		X(bool,piston)
+		X(double,r)
 	DECLARE_STRUCT(Output,DRIVEBASE_OUTPUT)
 
-	#define PISTON_STATES X(FULL) X(EMPTY) X(FILLING) X(EMPTYING)
-	enum class Piston{
-		#define X(NAME) NAME,
-		PISTON_STATES
-		#undef X
-	};
-
 	#define DRIVEBASE_STATUS(X) \
-		X(SINGLE_ARG(std::array<Motor_check::Status,MOTORS>),motor)\
-		X(Piston,piston)
+		X(SINGLE_ARG(std::array<Motor_check::Status,MOTORS>),motor)
 	DECLARE_STRUCT(Status,DRIVEBASE_STATUS)
 
 	typedef Status Status_detail;
 
 	struct Estimator{
 		std::array<Motor_check,MOTORS> motor_check;
-
-		bool piston_last;
-		Countdown_timer piston_timer;
-		Piston piston;
-
-		Estimator();
 
 		void update(Time,Input,Output);
 		Status_detail get()const;
@@ -73,8 +57,6 @@ struct Drivebase{
 		double x,y,theta;
 	};
 };
-
-std::ostream& operator<<(std::ostream&,Drivebase::Piston);
 
 std::ostream& operator<<(std::ostream&,Drivebase::Input const&);
 bool operator<(Drivebase::Input const&,Drivebase::Input const&);

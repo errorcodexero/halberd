@@ -120,12 +120,9 @@ Toplevel::Goal Main::teleop(
 
 unsigned pdb_location1(Drivebase::Motor m){
 	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
-	X(LEFT1,12)
-	X(LEFT2,13)
-	X(RIGHT1,14)
-	X(RIGHT2,15)
-	X(CENTER1,2)
-	X(CENTER2,3)
+	//WILL NEED CORRECT VALUES
+	X(LEFT,12)
+	X(RIGHT,13)
 	#undef X
 	assert(0);
 	//assert(m>=0 && m<Drivebase::MOTORS);
