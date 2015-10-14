@@ -7,7 +7,6 @@
 using namespace std;
 
 Toplevel::Toplevel():
-	can_grabber(0,4),
 	input_reader(this),
 	estimator(this),
 	output_applicator(this)
@@ -135,8 +134,7 @@ Toplevel::Status::Status():
 	drive(
 		{Motor_check::Status::OK_,Motor_check::Status::OK_}
 	),
-	pump(Pump::Status::NOT_FULL),
-	can_grabber(Can_grabber::Status::INITIAL)
+	pump(Pump::Status::NOT_FULL)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -304,13 +302,8 @@ bool operator<(Toplevel::Goal const& a,Toplevel::Goal const& b){
 
 set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 	return {Toplevel::Status_detail{
-		{
-			Lift::Status_detail::error(),
-			Lift::Status_detail::error()
-		},
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{},
-		Can_grabber::Status_detail{Can_grabber::Status::INITIAL, Lift::Status_detail::error()},
 		Tote_sensors::Status_detail{}
 	}};
 }
@@ -325,10 +318,8 @@ set<Toplevel::Status> examples(Toplevel::Status*){ return {Toplevel::Status{}}; 
 
 set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
-		Combo_lift::Input(),
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
-		Can_grabber::Input{Lift::Input{0,0,0,0},0},
 		Tote_sensors::Input{0,0,0}
 	};
 	return {a};
@@ -336,13 +327,8 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 
 set<Toplevel::Output> examples(Toplevel::Output*){
 	Toplevel::Output a;
-	a.can_grabber=Can_grabber::Output::LOCK;
 	/*return {Toplevel::Output{
-		Lift::Output{},
-		Lift::Output{},
-		Kicker::Output::STOP,
 		Pump::Output::AUTO,
-		Can_grabber::Output{}
 	}};*/
 	set<Toplevel::Output> r;
 	r.insert(a);
@@ -435,7 +421,6 @@ pair<Robot_inputs,Robot_inputs> create_pair(Robot_inputs*){
 	/*for(unsigned i=0;i<Robot_outputs::CAN_JAGUARS;i++){
 		auto p=create_pair((Can_jaguar_input*)0);
 		r.first.can_jaguar[i]=p.first;
-		r.second.can_jaguar[i]=p.second;
 	}*/
 	//driver station
 	//current

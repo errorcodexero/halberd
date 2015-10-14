@@ -2,9 +2,7 @@
 #define PANEL2015_H 
 
 #include "../util/maybe.h"
-#include "../control/lift.h"
 #include "../util/interface.h"
-#include "../control/combo_lift.h"
 
 struct Panel{
 	bool in_use;//Added

@@ -6,7 +6,6 @@ g++ -Wall -Werror -std=c++0x -DMONITOR_TEST \
 	pump.cpp \
 	../util/posedge_toggle.cpp \
 	force_interface.cpp \
-	lift.cpp \
 	drivebase.cpp \
 	../util/driver_station_interface.cpp \
 	../util/util.cpp \
@@ -15,9 +14,7 @@ g++ -Wall -Werror -std=c++0x -DMONITOR_TEST \
 	../util/posedge_trigger.cpp \
 	../util/point.cpp \
 	../util/negedge_trigger.cpp \
-	can_grabber.cpp\
 	../util/countdown_timer.cpp\
-	combo_lift.cpp\
 	motor_check.cpp\
 	tote_sensors.cpp\
 	-o monitor 2>&1 && ./monitor

@@ -4,15 +4,11 @@
 #include<vector>
 #include "pump.h"
 #include "drivebase.h"
-#include "combo_lift.h"
-#include "can_grabber.h"
 #include "tote_sensors.h"
 
 #define TOPLEVEL_ITEMS\
-	X(Combo_lift,combo_lift,Combo_lift::Goal{})\
 	X(Drivebase,drive,)\
 	X(Pump,pump,Pump::Goal::AUTO)\
-	X(Can_grabber,can_grabber,Can_grabber::Goal::TOP)\
 	X(Tote_sensors,tote_sensors,Tote_sensors::Goal{})
 
 class Toplevel{
