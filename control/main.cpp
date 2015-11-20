@@ -61,9 +61,18 @@ Toplevel::Goal Main::teleop(
 	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];
 	
 	Drivebase::Goal &goal=goals.drive;	
-	if(!nudges[2].timer.done())goal.y=-Y_NUDGE_POWER;
-	else if(!nudges[3].timer.done())goal.y=Y_NUDGE_POWER;
-	else goal.y=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+	if(!nudges[2].timer.done()){
+		goal.left=-Y_NUDGE_POWER;
+		goal.right=-Y_NUDGE_POWER;
+	}
+	else if(!nudges[3].timer.done()){
+		goal.left=Y_NUDGE_POWER;
+		goal.right=Y_NUDGE_POWER;
+	}
+	else{
+		goal.left=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+		goal.right=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+	}
 	
 	if(!nudges[4].timer.done())goal.theta=-ROTATE_NUDGE_POWER;
 	else if(!nudges[5].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
@@ -84,15 +93,18 @@ Toplevel::Goal Main::teleop(
 		if(main_joystick.button[NUDGE_FWD_BUTTON]){
 			bool left=in.digital_io.in[7]==Digital_in::_1, right=in.digital_io.in[8]==Digital_in::_1;
 			if(!left&&!right){
-				goal.y=-Y_NUDGE_POWER*1.5;
+				goal.left=-Y_NUDGE_POWER*1.5;
+				goal.right=-Y_NUDGE_POWER*1.5;
 			}else{
 				if(!left){
 					goal.theta=ROTATE_NUDGE_POWER/2;
-					goal.y=-Y_NUDGE_POWER/2;
+					goal.left=-Y_NUDGE_POWER/2;
+					goal.right=-Y_NUDGE_POWER/2;
 				}
 				if(!right){
 					goal.theta=-ROTATE_NUDGE_POWER/2;
-					goal.y=-Y_NUDGE_POWER/2;
+					goal.left=-Y_NUDGE_POWER/2;
+					goal.right=-Y_NUDGE_POWER/2;
 				}
 			}
 		}
@@ -187,14 +199,16 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 			goals=teleop(in,main_joystick,gunner_joystick,oi_panel,toplevel_status);
 			break;
 		case Mode::AUTO_MOVE:
-			goals.drive.y=-.45;
+			goals.drive.left=-.45;
+			goals.drive.right=-.45;
 			goals.drive.theta=0;
 			break;
 		case Mode::AUTO_GRAB:
 			
 			break;
 		case Mode::AUTO_BACK:
-			goals.drive.y=-.6;
+			goals.drive.left=-.6;
+			goals.drive.right=-.6;
 			goals.drive.theta=0;
 			break;
 		case Mode::AUTO_RELEASE:

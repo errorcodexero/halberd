@@ -70,14 +70,14 @@ set<Drivebase::Status> examples(Drivebase::Status*){
 
 set<Drivebase::Goal> examples(Drivebase::Goal*){
 	return {
-		Drivebase::Goal{0,0},
-		Drivebase::Goal{1,0}
+		Drivebase::Goal{0,0,0},
+		Drivebase::Goal{1,1,0}
 	};
 }
 
 ostream& operator<<(ostream& o,Drivebase::Goal const& a){
 	o<<"Drivebase::Goal(";
-	o<<a.y<<" "<<a.theta;
+	o<<a.left<<" "<<" "<<a.right<<" "<<a.theta;
 	return o<<")";
 }
 
