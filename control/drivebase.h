@@ -54,7 +54,7 @@ struct Drivebase{
 
 	struct Goal{
 		//speeds
-		double x,y,theta;
+		double y,theta;
 	};
 };
 

@@ -52,7 +52,7 @@ Toplevel::Goal Main::teleop(
 	//cout<<toplevel_status<<"\n";
 	Toplevel::Goal goals;
 
-	static const float X_NUDGE_POWER=.45;//Change these nudge values to adjust the nudge speeds/amounts
+	//Change these nudge values to adjust the nudge speeds/amounts
 	static const float Y_NUDGE_POWER=.2;
 	static const float ROTATE_NUDGE_POWER=.5;
 
@@ -60,11 +60,7 @@ Toplevel::Goal Main::teleop(
 	
 	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER];
 	
-	Drivebase::Goal &goal=goals.drive;
-	if(!nudges[0].timer.done())goal.x=-X_NUDGE_POWER;
-	else if(!nudges[1].timer.done())goal.x=X_NUDGE_POWER;
-	else goal.x=main_joystick.axis[Gamepad_axis::LEFTX];
-
+	Drivebase::Goal &goal=goals.drive;	
 	if(!nudges[2].timer.done())goal.y=-Y_NUDGE_POWER;
 	else if(!nudges[3].timer.done())goal.y=Y_NUDGE_POWER;
 	else goal.y=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
@@ -85,7 +81,6 @@ Toplevel::Goal Main::teleop(
 	}
 	
 	
-	//auto nudge!
 	if(!normal_nudge_enable){
 		if(main_joystick.button[NUDGE_FWD_BUTTON]){
 			//kick_and_lift=0;
@@ -105,9 +100,6 @@ Toplevel::Goal Main::teleop(
 					goal.theta=-ROTATE_NUDGE_POWER/2;
 					goal.y=-Y_NUDGE_POWER/2;
 				}
-			}
-			if(left && right){
-				//nada
 			}
 		}
 	}
@@ -201,7 +193,6 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 			goals=teleop(in,main_joystick,gunner_joystick,oi_panel,toplevel_status);
 			break;
 		case Mode::AUTO_MOVE:
-			goals.drive.x=0;
 			goals.drive.y=-.45;
 			goals.drive.theta=0;
 			break;
@@ -209,7 +200,6 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 			
 			break;
 		case Mode::AUTO_BACK:
-			goals.drive.x=0;
 			goals.drive.y=-.6;
 			goals.drive.theta=0;
 			break;

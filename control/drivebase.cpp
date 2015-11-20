@@ -70,21 +70,20 @@ set<Drivebase::Status> examples(Drivebase::Status*){
 
 set<Drivebase::Goal> examples(Drivebase::Goal*){
 	return {
-		Drivebase::Goal{0,0,0},
-		Drivebase::Goal{0,1,0}
+		Drivebase::Goal{0,0},
+		Drivebase::Goal{1,0}
 	};
 }
 
 ostream& operator<<(ostream& o,Drivebase::Goal const& a){
 	o<<"Drivebase::Goal(";
-	o<<a.x<<" "<<a.y<<" "<<a.theta;
+	o<<a.y<<" "<<a.theta;
 	return o<<")";
 }
 
 #define CMP(name) if(a.name<b.name) return 1; if(b.name<a.name) return 0;
 
 bool operator<(Drivebase::Goal const& a,Drivebase::Goal const& b){
-	CMP(x)
 	CMP(y)
 	CMP(theta)
 	return 0;
