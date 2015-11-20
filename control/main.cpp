@@ -58,7 +58,7 @@ Toplevel::Goal Main::teleop(
 
 	static const bool SLOW_TURNING=0;//Slows drive turning
 	
-	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER];
+	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];
 	
 	Drivebase::Goal &goal=goals.drive;	
 	if(!nudges[2].timer.done())goal.y=-Y_NUDGE_POWER;
@@ -67,14 +67,13 @@ Toplevel::Goal Main::teleop(
 	
 	if(!nudges[4].timer.done())goal.theta=-ROTATE_NUDGE_POWER;
 	else if(!nudges[5].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
-	else goal.theta=-set_drive_speed(main_joystick,4,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER],SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
+	else goal.theta=-set_drive_speed(main_joystick,4,turbo_button,slow_button,SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
 
 	const bool normal_nudge_enable=turbo_button<.25;			
-	static const auto NUDGE_LEFT_BUTTON=Gamepad_button::X,NUDGE_RIGHT_BUTTON=Gamepad_button::B;
 	static const auto NUDGE_CCW_BUTTON=Gamepad_button::RB,NUDGE_CW_BUTTON=Gamepad_button::LB;
 	static const auto NUDGE_FWD_BUTTON=Gamepad_button::Y,NUDGE_BACK_BUTTON=Gamepad_button::A;
-	static const unsigned int nudge_buttons[6]={NUDGE_LEFT_BUTTON,NUDGE_RIGHT_BUTTON,NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
-	for(int i=0;i<6;i++){
+	static const unsigned int nudge_buttons[6]={NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
+	for(int i=0;i<4;i++){
 		bool start=nudges[i].trigger(normal_nudge_enable&&main_joystick.button[nudge_buttons[i]]);
 		if(start)nudges[i].timer.set(.1);
 		nudges[i].timer.update(in.now,1);
@@ -83,12 +82,7 @@ Toplevel::Goal Main::teleop(
 	
 	if(!normal_nudge_enable){
 		if(main_joystick.button[NUDGE_FWD_BUTTON]){
-			//kick_and_lift=0;
-			if(piston.get()){
-				piston.update(1);
-			}
-			bool left=in.digital_io.in[7]==Digital_in::_1;
-			bool right=in.digital_io.in[8]==Digital_in::_1;
+			bool left=in.digital_io.in[7]==Digital_in::_1, right=in.digital_io.in[8]==Digital_in::_1;
 			if(!left&&!right){
 				goal.y=-Y_NUDGE_POWER*1.5;
 			}else{
