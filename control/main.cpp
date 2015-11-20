@@ -72,7 +72,7 @@ Toplevel::Goal Main::teleop(
 	const bool normal_nudge_enable=turbo_button<.25;			
 	static const auto NUDGE_CCW_BUTTON=Gamepad_button::RB,NUDGE_CW_BUTTON=Gamepad_button::LB;
 	static const auto NUDGE_FWD_BUTTON=Gamepad_button::Y,NUDGE_BACK_BUTTON=Gamepad_button::A;
-	static const unsigned int nudge_buttons[6]={NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
+	static const unsigned int nudge_buttons[4]={NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
 	for(int i=0;i<4;i++){
 		bool start=nudges[i].trigger(normal_nudge_enable&&main_joystick.button[nudge_buttons[i]]);
 		if(start)nudges[i].timer.set(.1);
@@ -209,25 +209,6 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 
 	auto r=toplevel.output_applicator(Robot_outputs{},r_out);
 	r=force(r);
-
-	/*Lift::Input can_input;
-	can_input.top=in.talon_srx[1].fwd_limit_switch;
-	can_input.bottom=in.talon_srx[1].rev_limit_switch;
-	can_input.ticks=in.talon_srx[1].encoder_position;
-	Lift::Input tote_input;
-	tote_input.top=in.talon_srx[0].fwd_limit_switch;
-	tote_input.bottom=in.talon_srx[0].rev_limit_switch;
-	tote_input.ticks=in.talon_srx[0].encoder_position;
-
-	Drivebase::Input drive_in{[&](){
-		array<double,Drivebase::MOTORS> r;
-		for(unsigned i=0;i<Drivebase::MOTORS;i++){
-			Drivebase::Motor m=(Drivebase::Motor)i;
-			r[i]=in.current[pdb_location1(m)];
-		}
-		return r;
-	}()};*/
-
 	auto input=toplevel.input_reader(in);
 
 	toplevel.estimator.update(

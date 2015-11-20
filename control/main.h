@@ -32,7 +32,7 @@ struct Main{
 		Posedge_trigger trigger;
 		Countdown_timer timer;
 	};
-	Nudge nudges[6];//Left, Right, Forward, Backward, Clockwise, Counter-clockwise
+	Nudge nudges[4];//Forward, Backward, Clockwise, Counter-clockwise
 		
 	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail&);
 	Main();

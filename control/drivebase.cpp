@@ -84,7 +84,8 @@ ostream& operator<<(ostream& o,Drivebase::Goal const& a){
 #define CMP(name) if(a.name<b.name) return 1; if(b.name<a.name) return 0;
 
 bool operator<(Drivebase::Goal const& a,Drivebase::Goal const& b){
-	CMP(y)
+	CMP(left)
+	CMP(right)
 	CMP(theta)
 	return 0;
 }
