@@ -7,8 +7,8 @@
 using namespace std;
 
 unsigned pdb_location(Drivebase::Motor m){
-        #define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
-        //WILL NEED CORRECT VALUES
+	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
+	//WILL NEED CORRECT VALUES
 	X(LEFT,12)
         X(RIGHT,13)
         #undef X
@@ -175,11 +175,7 @@ bool operator==(Drivebase const& a,Drivebase const& b){
 bool operator!=(Drivebase const& a,Drivebase const& b){ return !(a==b); }
 
 Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
-	double l=goal.y+goal.theta;
-	double r=goal.y-goal.theta;
-	auto m=max(1.0,max(fabs(l),fabs(r)));
-
-	return Drivebase::Output{l/m,r/m};
+	return Drivebase::Output{goal.left,goal.right};
 }
 
 Drivebase::Status status(Drivebase::Status a){ return a; }
