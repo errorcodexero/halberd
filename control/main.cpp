@@ -63,8 +63,8 @@ Toplevel::Goal Main::teleop(
 		goal.right=Y_NUDGE_POWER;
 	}
 	else{
-		goal.left=set_drive_speed(main_joystick.axis[Gamepad_axis::LEFTY],turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
-		goal.right=set_drive_speed(main_joystick.axis[Gamepad_axis::RIGHTY],turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+		goal.left=set_drive_speed(main_joystick.axis[Gamepad_axis::LEFTY],turbo_button,slow_button);
+		goal.right=set_drive_speed(main_joystick.axis[Gamepad_axis::RIGHTY],turbo_button,slow_button);
 	}
 	
 	static const double TURNING=.75;
