@@ -35,7 +35,7 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 }
 
 Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs in)const{
-	auto encoder_info=[&](unsigned a){
+	auto encoder_info=[&](unsigned a, unsigned b){
 		return make_pair(in.digital_io.in[a],in.digital_io.in[b]);
 	};
 	return Drivebase::Input{
@@ -100,8 +100,9 @@ set<Drivebase::Output> examples(Drivebase::Output*){
 
 set<Drivebase::Input> examples(Drivebase::Input*){
 	auto d=Digital_in::_0;
+	auto p=make_pair(d,d);
 	return {Drivebase::Input{
-		{0,0},d,d
+		{0,0},p,p
 	}};
 }
 
