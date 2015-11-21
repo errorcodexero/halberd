@@ -9,8 +9,10 @@ using namespace std;
 unsigned pdb_location(Drivebase::Motor m){
 	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
 	//WILL NEED CORRECT VALUES
-	X(LEFT,12)
-        X(RIGHT,13)
+	X(LEFT1,0)
+        X(LEFT2,1)
+	X(RIGHT1,2)
+	X(RIGHT2,3)
         #undef X
         assert(0);
         //assert(m>=0 && m<Drivebase::MOTORS);
@@ -23,18 +25,18 @@ Robot_inputs Drivebase::Input_reader::operator()(Robot_inputs all,Input in)const
 	auto set=[&](unsigned index,Digital_in value){
 		all.digital_io.in[index]=value;
 	};
-	auto encoder=[&](unsigned a,Encoder_info e){
-		set(a,e);
+	auto encoder=[&](unsigned a,unsigned b,Encoder_info e){
+		set(a,e.first);
+		set(b,e.second);
 	};
-	//WILL NEED CORRECT VALUES
-	encoder(0,in.left);
-	encoder(1,in.right);
+	encoder(0,1,in.left);
+	encoder(2,3,in.right);
 	return all;
 }
 
 Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs in)const{
 	auto encoder_info=[&](unsigned a){
-		return in.digital_io.in[a];
+		return make_pair(in.digital_io.in[a],in.digital_io.in[b]);
 	};
 	return Drivebase::Input{
 		[&](){
@@ -45,9 +47,8 @@ Drivebase::Input Drivebase::Input_reader::operator()(Robot_inputs in)const{
 			}
 			return r;
 		}(),
-		//WILL NEED CORRECT VALUES
-		encoder_info(0),
-		encoder_info(1)
+		encoder_info(0,1),
+		encoder_info(2,3)
 	};
 }
 
@@ -122,8 +123,10 @@ ostream& operator<<(ostream& o,Drivebase const& a){
 
 double get_output(Drivebase::Output out,Drivebase::Motor m){
 	#define X(NAME,POSITION) if(m==Drivebase::NAME) return out.POSITION;
-	X(LEFT,l)
-	X(RIGHT,r)
+	X(LEFT1,l)
+	X(LEFT2,l)
+	X(RIGHT1,r)
+	X(RIGHT2,r)
 	#undef X
 	assert(0);
 }
@@ -138,14 +141,12 @@ void Drivebase::Estimator::update(Time now,Drivebase::Input in,Drivebase::Output
 }
 
 Robot_outputs Drivebase::Output_applicator::operator()(Robot_outputs robot,Drivebase::Output b)const{
-	//WILL NEED CORRECT VALUES
 	robot.pwm[0]=-pwm_convert(b.l);
 	robot.pwm[1]=pwm_convert(b.r);
 	return robot;
 }
 
 Drivebase::Output Drivebase::Output_applicator::operator()(Robot_outputs robot)const{
-	//WILL NEED CORRECT VALUES
 	return Drivebase::Output{
 		-from_pwm(robot.pwm[0]),
 		from_pwm(robot.pwm[1])

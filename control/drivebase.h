@@ -9,9 +9,9 @@
 #include "../util/countdown_timer.h"
 
 struct Drivebase{
-	enum Motor{LEFT,RIGHT,MOTORS};
+	enum Motor{LEFT1,LEFT2,RIGHT1,RIGHT2,MOTORS};
 
-	typedef Digital_in Encoder_info;
+	typedef std::pair<Digital_in,Digital_in> Encoder_info;
 
 	#define DRIVEBASE_INPUT(X) \
 		X(SINGLE_ARG(std::array<double,MOTORS>),current)\
