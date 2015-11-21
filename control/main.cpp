@@ -49,16 +49,11 @@ Toplevel::Goal Main::teleop(
 	Panel const&  /*oi_panel*/,
 	Toplevel::Status_detail& /*toplevel_status*/
 ){
-	//cout<<toplevel_status<<"\n";
 	Toplevel::Goal goals;
 
-	//Change these nudge values to adjust the nudge speeds/amounts
-	static const float Y_NUDGE_POWER=.2;
-	static const float ROTATE_NUDGE_POWER=.5;
-
-	static const bool SLOW_TURNING=0;//Slows drive turning
-	
-	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];
+	static const float Y_NUDGE_POWER=.2, ROTATE_NUDGE_POWER=.5;//nudge amounts 
+	static const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons
+	static const bool SLOW_TURNING=0;//slows drive turning
 	
 	Drivebase::Goal &goal=goals.drive;	
 	if(!nudges[0].timer.done()){
@@ -78,35 +73,21 @@ Toplevel::Goal Main::teleop(
 	else if(!nudges[3].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
 	else goal.theta=-set_drive_speed(main_joystick,Gamepad_axis::RIGHTX,turbo_button,slow_button,SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
 
-	const bool normal_nudge_enable=turbo_button<.25;			
+	static const bool normal_nudge_enable=turbo_button<.25;	
 	static const auto NUDGE_CCW_BUTTON=Gamepad_button::X,NUDGE_CW_BUTTON=Gamepad_button::B;
 	static const auto NUDGE_FWD_BUTTON=Gamepad_button::Y,NUDGE_BACK_BUTTON=Gamepad_button::A;
 	static const unsigned int nudge_buttons[4]={NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
 	for(int i=0;i<4;i++){
-		bool start=nudges[i].trigger(normal_nudge_enable&&main_joystick.button[nudge_buttons[i]]);
+		bool start=nudges[i].trigger(normal_nudge_enable && main_joystick.button[nudge_buttons[i]]);
 		if(start)nudges[i].timer.set(.1);
 		nudges[i].timer.update(in.now,1);
 	}
-	
-	
+		
 	if(!normal_nudge_enable){
 		if(main_joystick.button[NUDGE_FWD_BUTTON]){
-			bool left=in.digital_io.in[7]==Digital_in::_1, right=in.digital_io.in[8]==Digital_in::_1;
-			if(!left&&!right){
-				goal.left=-Y_NUDGE_POWER*1.5;
-				goal.right=-Y_NUDGE_POWER*1.5;
-			}else{
-				if(!left){
-					goal.theta=ROTATE_NUDGE_POWER/2;
-					goal.left=-Y_NUDGE_POWER/2;
-					goal.right=-Y_NUDGE_POWER/2;
-				}
-				if(!right){
-					goal.theta=-ROTATE_NUDGE_POWER/2;
-					goal.left=-Y_NUDGE_POWER/2;
-					goal.right=-Y_NUDGE_POWER/2;
-				}
-			}
+			goal.left=-Y_NUDGE_POWER*1.5;
+			goal.right=-Y_NUDGE_POWER*1.5;
+			
 		}
 	}
 	
