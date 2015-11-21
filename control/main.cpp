@@ -61,25 +61,25 @@ Toplevel::Goal Main::teleop(
 	const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];
 	
 	Drivebase::Goal &goal=goals.drive;	
-	if(!nudges[2].timer.done()){
+	if(!nudges[0].timer.done()){
 		goal.left=-Y_NUDGE_POWER;
 		goal.right=-Y_NUDGE_POWER;
 	}
-	else if(!nudges[3].timer.done()){
+	else if(!nudges[1].timer.done()){
 		goal.left=Y_NUDGE_POWER;
 		goal.right=Y_NUDGE_POWER;
 	}
 	else{
-		goal.left=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
-		goal.right=set_drive_speed(main_joystick,1,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+		goal.left=set_drive_speed(main_joystick,Gamepad_axis::LEFTY,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
+		goal.right=set_drive_speed(main_joystick,Gamepad_axis::LEFTY,turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
 	}
 	
-	if(!nudges[4].timer.done())goal.theta=-ROTATE_NUDGE_POWER;
-	else if(!nudges[5].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
-	else goal.theta=-set_drive_speed(main_joystick,4,turbo_button,slow_button,SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
+	if(!nudges[2].timer.done()) goal.theta=-ROTATE_NUDGE_POWER;
+	else if(!nudges[3].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
+	else goal.theta=-set_drive_speed(main_joystick,Gamepad_axis::RIGHTX,turbo_button,slow_button,SLOW_TURNING);//theta is /2 so rotation is reduced to prevent bin tipping.
 
 	const bool normal_nudge_enable=turbo_button<.25;			
-	static const auto NUDGE_CCW_BUTTON=Gamepad_button::RB,NUDGE_CW_BUTTON=Gamepad_button::LB;
+	static const auto NUDGE_CCW_BUTTON=Gamepad_button::X,NUDGE_CW_BUTTON=Gamepad_button::B;
 	static const auto NUDGE_FWD_BUTTON=Gamepad_button::Y,NUDGE_BACK_BUTTON=Gamepad_button::A;
 	static const unsigned int nudge_buttons[4]={NUDGE_FWD_BUTTON,NUDGE_BACK_BUTTON,NUDGE_CCW_BUTTON,NUDGE_CW_BUTTON};
 	for(int i=0;i<4;i++){
