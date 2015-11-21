@@ -11,8 +11,6 @@
 struct Drivebase{
 	enum Motor{LEFT,RIGHT,MOTORS};
 
-	//This should eventually have counters or something
-	//No it shouldn't
 	typedef Digital_in Encoder_info;
 
 	#define DRIVEBASE_INPUT(X) \

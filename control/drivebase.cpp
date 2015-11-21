@@ -76,9 +76,7 @@ set<Drivebase::Goal> examples(Drivebase::Goal*){
 }
 
 ostream& operator<<(ostream& o,Drivebase::Goal const& a){
-	o<<"Drivebase::Goal(";
-	o<<a.left<<" "<<" "<<a.right<<" "<<a.theta;
-	return o<<")";
+	return o<<"Drivebase::Goal("<<a.left<<" "<<" "<<a.right<<" "<<a.theta<<")";
 }
 
 #define CMP(name) if(a.name<b.name) return 1; if(b.name<a.name) return 0;
@@ -119,9 +117,7 @@ ostream& operator<<(ostream& o,Drivebase::Output_applicator){
 }
 
 ostream& operator<<(ostream& o,Drivebase const& a){
-	o<<"Drivebase(";
-	o<<a.estimator.get();
-	return o<<")";
+	return o<<"Drivebase("<<a.estimator.get()<<")";
 }
 
 double get_output(Drivebase::Output out,Drivebase::Motor m){
