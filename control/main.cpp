@@ -25,7 +25,7 @@ Main::Main():mode(Mode::TELEOP),autonomous_start(0){}
 double set_drive_speed(double a,double boost,double slow){
 	static const float DEFAULT_SPEED=.35;//Change these value to change the default speed
 	static const float SLOW_BY=.5;//Change this value to change the percentage of the default speed the slow button slows
-	return pow(a, 3)*((DEFAULT_SPEED+(1-DEFAULT_SPEED)*boost)-((DEFAULT_SPEED*SLOW_BY)*slow));
+	return pow(a,3)*((DEFAULT_SPEED+(1-DEFAULT_SPEED)*boost)-((DEFAULT_SPEED*SLOW_BY)*slow));
 }
 
 template<typename T>//Compares two types to see if one is within a range
@@ -51,8 +51,7 @@ Toplevel::Goal Main::teleop(
 	Toplevel::Goal goals;
 
 	static const float Y_NUDGE_POWER=.2, ROTATE_NUDGE_POWER=.5;//nudge amounts 
-	static const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons
-	static const double TURNING = .75;	
+	static const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons	
 	
 	Drivebase::Goal &goal=goals.drive;	
 	if(!nudges[0].timer.done()){
@@ -68,6 +67,7 @@ Toplevel::Goal Main::teleop(
 		goal.right=set_drive_speed(main_joystick.axis[Gamepad_axis::RIGHTY],turbo_button,main_joystick.axis[Gamepad_axis::RTRIGGER]);
 	}
 	
+	static const double TURNING=.75;
 	double real_turning = main_joystick.button[Gamepad_button::LB] ? TURNING : (main_joystick.button[Gamepad_button::RB] ? -TURNING : 0); 
 	const float LIMIT=0.005;
 	const float SLOW_TURNING=.8;
@@ -89,14 +89,6 @@ Toplevel::Goal Main::teleop(
 		bool start=nudges[i].trigger(normal_nudge_enable && main_joystick.button[nudge_buttons[i]]);
 		if(start)nudges[i].timer.set(.1);
 		nudges[i].timer.update(in.now,1);
-	}
-		
-	if(!normal_nudge_enable){
-		if(main_joystick.button[NUDGE_FWD_BUTTON]){
-			goal.left=-Y_NUDGE_POWER*1.5;
-			goal.right=-Y_NUDGE_POWER*1.5;
-			
-		}
 	}
 	
 	goals.drive=goal;
