@@ -18,19 +18,24 @@ def makefile(out):
 	def get_cppfile(test_script):
 		return get_dir(test_script)+'/'+get_base(test_script)+'.cpp'
 
-	test_scripts=filter(lambda x: 'joystick_linux' not in x,glob('*/*_test'))
+	objdir='tobj'
+	test_scripts=filter(lambda x: 'joystick_linux' not in x and x.split('/')[0]!=objdir,glob('*/*_test'))
+	dirs=set(map(get_dir,test_scripts))
+	map(lambda x: os.system('mkdir -p '+objdir+'/%s'%x),dirs)
 
+	print>>out,'OBJDIR='+objdir
 	print>>out,'H_FILES=*.h */*.h'
-	print>>out,'CXX_FLAGS=-Wall -Wextra -Werror -std=c++11 -g'
+	print>>out,'CXXFLAGS=-Wall -Wextra -Werror -std=c++11 -g'
+	print>>out,'export SHELL=/bin/bash' #so that later stderr redirection will work
 	print>>out,'.PHONY: clean'
 	print>>out,''
 
 	print>>out,'all:',
-	for a in test_scripts: print>>out, get_target_name(a),
+	for a in test_scripts: print>>out, objdir+'/log_'+get_target_name(a),
 	print>>out, ''
 
-	print>>out,'%.o: %.cpp ${H_FILES}'
-	print>>out,'\t$(CXX) $(CXX_FLAGS) -c $(basename $@).cpp -o $@'
+	print>>out,'$(OBJDIR)/%.o: %.cpp ${H_FILES}'
+	print>>out,'\t$(CXX) $(CXXFLAGS) -c -o $@ $<'
 	print>>out,''
 
 	#str->[str]
@@ -54,18 +59,23 @@ def makefile(out):
 		define=base.upper()+'_TEST'
 		if test_script=='input/util_test':
 			define='INPUT_UTIL_TEST'
-
+		
 		cppfile=get_cppfile(test_script)
-		objects=' '.join(objects_needed(test_script))
-		print>>out, '%s: ${H_FILES} util/util.o %s'%(get_target_name(test_script),cppfile),objects
-		exe_name='test_'+base
-		print>>out, '\t$(CXX) $(CXX_FLAGS) -D%s'%define,objects,cppfile,'-o',exe_name
-		print>>out, '\tvalgrind --error-exitcode=1 ./%s'%exe_name
-		print>>out, '\t./%s'%exe_name
-		print>>out,''
+		objects=(' '+objdir+'/').join(objects_needed(test_script))
+		target=get_target_name(test_script)
+		print>>out, objdir+'/'+target+': ${H_FILES} '+objdir+'/util/util.o %s'%cppfile,objects
+		exe_name=objdir+'/'+target#'test_'+base
+		print>>out, '\t$(CXX) $(CXXFLAGS) -D%s'%define,objects,cppfile,'-o',exe_name
+		logfile=objdir+'/log_'+target
+		#print>>out, '\tvalgrind --error-exitcode=1 ./%s &> %s'%(exe_name,logfile)
+		#print>>out, '\t./%s'%exe_name
 
-	print>>out, 'clean:' 
-	print>>out, '\trm -f test_*'
+		#The thing that actually runs the test program:
+		print>>out,objdir+'/log_%s: %s/%s'%(target,objdir,target)
+		print>>out, '\tvalgrind --error-exitcode=1 ./%s &> %s'%(exe_name,logfile)
+
+	print>>out, 'clean:'
+	print>>out, '\trm -f *_test'
 	print>>out, '\tfind -name \*.o | xargs rm -f'
 
 def cross_makefile(out):
@@ -76,42 +86,62 @@ def cross_makefile(out):
 		#print cppfiles
 		return map(lambda x: '.'.join(x.split('.')[:-1])+'.o',cppfiles)
 
+	print>>out,'OBJDIR=obj'
 	print>>out,"H_FILES=*.h */*.h"
 	print>>out,"CXX=arm-frc-linux-gnueabi-g++"
-	print>>out,"CXX_FLAGS=-Wall -Wextra -Werror -O2 -g --std=c++11 -I"+os.environ['HOME']+"/wpilib/cpp/current/include -fmessage-length=0"
+	print>>out,"CXXFLAGS=-Wall -Wextra -Werror -O2 -g --std=c++11 -I"+os.environ['HOME']+"/wpilib/cpp/current/include -fmessage-length=0"
 	print>>out,"LD_FLAGS=-L"+os.environ['HOME']+"/wpilib/cpp/current/lib -Wl,-rpath,/opt/GenICam_v2_3/bin/Linux_armv7-a -lwpi"
 	print>>out,".PHONY: clean\n"
 
-	print>>out,"all:",
+	print>>out,"all: FRCUserProgram"
+
+	print>>out,"FRCUserProgram:",
 	for elem in object_files():
-		print>>out,elem,
+		print>>out,'obj/%s'%elem,
 	print>>out,""
 	print>>out,"\t$(CXX)",
-	for elem in object_files(): print>>out,elem,
+	for elem in object_files(): print>>out,'obj/%s'%elem,
 	print>>out," $(LD_FLAGS) -o FRCUserProgram -lwpi",
 	print>>out,"\n"
 
-	print>>out,"%.o: %.cpp ${H_FILES}"
-	print>>out,"\t$(CXX) $(CXX_FLAGS) -c $(basename $@).cpp -o $@\n"
+
+	print>>out,"$(OBJDIR)/%.o: %.cpp ${H_FILES}"
+	print>>out,"\t$(CXX) $(CXXFLAGS) -c -o $@ $<\n"
+
+	print>>out,"clean:"
+	print>>out,"\trm -f FRCUserProgram"
+	print>>out,"\tfind -name \*.o | xargs rm -f"
 
 if __name__=='__main__':
+	import os,sys
 	from optparse import OptionParser
 	p=OptionParser()
 	p.add_option('--test',action='store_true',help="Run unit tests")
 	p.add_option('--build',action='store_true',help="Build the executable to load onto the robot")
+	p.add_option('--test_makefile',action='store_true')
+	p.add_option('--build_makefile',action='store_true')
 	options,args=p.parse_args()
 	assert len(args)==0
 
-	if options.test:
+	def test():
 		func=makefile
 		func(open('t.mk','w'))
-		import os,sys
-		r=os.system('make -f t.mk && make -f t.mk clean')
+		#r=os.system('make -f t.mk && make -f t.mk clean')
+		r=os.system('make -j 4 -f t.mk')
 		assert r&0xff==0
-		sys.exit(r>>8)
-	elif options.build:
+		return r>>8
+
+	def build():
 		cross_makefile(open('t.mk','w'))
-		import os,sys
-		r=os.system('make -f t.mk')
+		r=os.system('make -j 4 -f t.mk')
 		assert r&0xff==0
-		sys.exit(r>>8)
+		return r>>8
+
+	if options.test: test()
+	if options.build: build()
+
+	if options.test_makefile:makefile(sys.stdout)
+	if options.build_makefile:cross_makefile(sys.stdout)
+
+	if not options.test and not options.build and not options.test_makefile and not options.build_makefile:
+		sys.exit(test() or build())
