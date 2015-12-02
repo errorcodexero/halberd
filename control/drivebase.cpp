@@ -1,4 +1,5 @@
 #include "drivebase.h"
+#include "../util/fixVictor.h"
 #include<iostream>
 #include<math.h>
 #include "../util/util.h"
@@ -173,7 +174,7 @@ bool operator==(Drivebase const& a,Drivebase const& b){
 bool operator!=(Drivebase const& a,Drivebase const& b){ return !(a==b); }
 
 Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
-	return Drivebase::Output{goal.left,goal.right};
+	return Drivebase::Output{velToPwm(goal.left),velToPwm(goal.right)};
 }
 
 Drivebase::Status status(Drivebase::Status a){ return a; }

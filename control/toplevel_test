@@ -1,5 +1,6 @@
 g++ -Wall -Werror -std=c++0x -DTOPLEVEL_TEST \
 	toplevel.cpp \
+	../util/fixVictor.cpp \
 	../util/posedge_trigger.cpp \
 	../util/negedge_trigger.cpp \
 	../util/countup_timer.cpp \
