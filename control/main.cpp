@@ -50,7 +50,7 @@ Toplevel::Goal Main::teleop(
 ){
 	Toplevel::Goal goals;
 
-	static const float Y_NUDGE_POWER=.2, ROTATE_NUDGE_POWER=.5;//nudge amounts 
+	static const float Y_NUDGE_POWER=.2;// ROTATE_NUDGE_POWER=.5;//nudge amounts 
 	static const double turbo_button=main_joystick.axis[Gamepad_axis::LTRIGGER], slow_button=main_joystick.axis[Gamepad_axis::RTRIGGER];//turbo and slow buttons	
 	
 	Drivebase::Goal &goal=goals.drive;	
@@ -73,8 +73,8 @@ Toplevel::Goal Main::teleop(
 	const float SLOW_TURNING=.8;
 
 	if(fabs(goal.left)<LIMIT && fabs(goal.right)<LIMIT){
-		if(!nudges[2].timer.done()) goal.theta=-ROTATE_NUDGE_POWER;
-		else if(!nudges[3].timer.done()) goal.theta=ROTATE_NUDGE_POWER;
+		if(!nudges[2].timer.done()); //goal.theta=-ROTATE_NUDGE_POWER;
+		else if(!nudges[3].timer.done()); //goal.theta=ROTATE_NUDGE_POWER;
 		else{
 			goal.left=(set_drive_speed(real_turning,turbo_button,slow_button))*SLOW_TURNING;
 			goal.right=(set_drive_speed(-real_turning,turbo_button,slow_button))*SLOW_TURNING;	
@@ -184,7 +184,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 		case Mode::AUTO_MOVE:
 			goals.drive.left=-.45;
 			goals.drive.right=-.45;
-			goals.drive.theta=0;
+			//goals.drive.theta=0;
 			break;
 		case Mode::AUTO_GRAB:
 			
@@ -192,7 +192,7 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 		case Mode::AUTO_BACK:
 			goals.drive.left=-.6;
 			goals.drive.right=-.6;
-			goals.drive.theta=0;
+			//goals.drive.theta=0;
 			break;
 		case Mode::AUTO_RELEASE:
 			break;	
