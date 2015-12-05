@@ -94,8 +94,8 @@ CMP_OPS(Drivebase::Output,DRIVEBASE_OUTPUT)
 
 set<Drivebase::Output> examples(Drivebase::Output*){
 	return {
-		Drivebase::Output{0,0},
-		Drivebase::Output{1,1}
+		Drivebase::Output{velToPwm(0),velToPwm(0)},
+		Drivebase::Output{velToPwm(1),velToPwm(1)}
 	};
 }
 
@@ -171,7 +171,9 @@ bool operator==(Drivebase const& a,Drivebase const& b){
 	return a.estimator==b.estimator && a.output_applicator==b.output_applicator;
 }
 
-bool operator!=(Drivebase const& a,Drivebase const& b){ return !(a==b); }
+bool operator!=(Drivebase const& a,Drivebase const& b){
+	return !(a==b);
+}
 
 Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
 	return Drivebase::Output{velToPwm(goal.left),velToPwm(goal.right)};
