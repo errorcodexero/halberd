@@ -63,6 +63,7 @@ def makefile(out):
 		
 		cppfile=get_cppfile(test_script)
 		objects=(' '+objdir+'/').join(objects_needed(test_script))
+		#objects=sorted(objects,key=lambda x: 'util.o' in x)
 		target=get_target_name(test_script)
 		print>>out, objdir+'/'+target+': ${H_FILES} '+objdir+'/util/util.o %s'%cppfile,objects
 		exe_name=objdir+'/'+target#'test_'+base

@@ -45,7 +45,9 @@ Jaguar_output Jaguar_output::voltageOut(double a){
 	return j;
 }
 
-Maybe<Jaguar_output> Jaguar_output::parse(std::string const& s){
+Maybe<Jaguar_output> Jaguar_output::parse(std::string const& ){
+	assert(0);
+	#if 0
 	Jaguar_output r;
 	string s2=inside_parens(s);
 	vector<string> v=split(s2,'=');
@@ -65,6 +67,7 @@ Maybe<Jaguar_output> Jaguar_output::parse(std::string const& s){
 		return Maybe<Jaguar_output>();
 	}
 	return Maybe<Jaguar_output>(r);
+	#endif
 }
 
 bool operator==(Jaguar_output a,Jaguar_output b){
@@ -153,10 +156,10 @@ int main(){
 	cout<<b<<"\n";
 	a.current=3;
 	a.speed=2.33;
-	assert(a==Jaguar_input::parse(as_string(a)));
+	/*assert(a==Jaguar_input::parse(as_string(a)));
 	b=Jaguar_output::speedOut(3);
 	b.pid.p=.444;
 	assert(b==Jaguar_output::parse(as_string(b)));
-	cout<<PID_coefficients()<<"\n";
+	cout<<PID_coefficients()<<"\n";*/
 }
 #endif
