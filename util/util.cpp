@@ -113,7 +113,7 @@ string combine_blanks(string s){
 	return ss.str();
 }
 
-vector<string> split(string s,char c){
+vector<string> split(string const& s,char c){
 	vector<string> r;
 	stringstream ss;
 	for(unsigned i=0;i<s.size();i++){
@@ -129,8 +129,8 @@ vector<string> split(string s,char c){
 }
 
 //this should probably go elsewhere, like util.cpp
-vector<string> split(string s){
-	s=combine_blanks(s);
+vector<string> split(string const& s1){
+	auto s=combine_blanks(s1);
 	vector<string> r;
 	stringstream ss;
 	for(unsigned i=0;i<s.size();i++){

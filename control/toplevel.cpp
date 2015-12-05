@@ -132,7 +132,8 @@ ostream& operator<<(ostream& o,Toplevel::Goal g){
 
 Toplevel::Status::Status():
 	drive(
-		{Motor_check::Status::OK_,Motor_check::Status::OK_}
+		{Motor_check::Status::OK_,Motor_check::Status::OK_},
+		0
 	),
 	pump(Pump::Status::NOT_FULL)
 {}

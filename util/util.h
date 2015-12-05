@@ -84,8 +84,8 @@ Maybe<T> parse_enum(std::vector<T> const& options,std::string const& value){
 	return Maybe<T>();
 }
 
-std::vector<std::string> split(std::string,char);
-std::vector<std::string> split(std::string);
+std::vector<std::string> split(std::string const&,char);
+std::vector<std::string> split(std::string const&);
 double atof(std::string const&);
 std::string inside_parens(std::string const&);
 
