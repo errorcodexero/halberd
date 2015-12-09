@@ -44,7 +44,7 @@ array<double,LEN> floats_to_doubles(array<float,LEN> a){
 Toplevel::Goal Main::teleop(
 	Robot_inputs const& in,
 	Joystick_data const& main_joystick,
-	Joystick_data const& /* gunner_joystick*/,
+	Joystick_data const&  gunner_joystick,
 	Panel const&  /*oi_panel*/,
 	Toplevel::Status_detail& /*toplevel_status*/
 ){

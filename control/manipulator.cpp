@@ -5,7 +5,6 @@ using namespace std;
 
 struct Arm{
 	enum class Goal{UP,DOWN};
-
 	enum class Status{UP,MID,DOWN};
 
 	struct Input{
@@ -42,6 +41,7 @@ struct Arm{
 	//Goal goal;
 	Output_applicator output_applicator;
 };
+
 Arm::Output control(Arm::Estimator e,Arm::Goal goal);
 Arm::Status status(Arm::Estimator);
 bool ready(Arm::Status,Arm::Goal);
@@ -87,6 +87,7 @@ bool askBool(string prompt){
 	getline(cin,answer);
 	return answer == "t";
 }
+
 #if 0
 int main(){
 	Arm arm;
