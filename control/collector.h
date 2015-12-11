@@ -4,6 +4,9 @@
 #include <iostream>
 #include "formal.h"
 #include <set>
+#include "../util/interface.h"
+#include "../util/driver_station_interface.h"
+#include "../util/util.h"
 
 using namespace std;
 
@@ -21,8 +24,8 @@ struct Collector{
 	Input input;
 	
 	struct Input_reader{
-		Input operator()(Robot_inputs)const{ return Input{};}
-		Robot_inputs operator()(Robot_inputs a,Input)const{ return a;}
+		Collector::Input operator()(Robot_inputs)const{ return Collector::Input{};}
+		Robot_inputs operator()(Robot_inputs a,Collector::Input)const{ return a;}
 	};
 	Input_reader input_reader;
 
@@ -30,8 +33,8 @@ struct Collector{
 	Output output;
 	
 	struct Output_applicator{
-		Robot_outputs operator()(Robot_outputs a,Output)const{ return a; }
-		Output operator()(Robot_outputs)const{ return Output{}; }	
+		Robot_outputs operator()(Robot_outputs,Output)const{ return Robot_outputs{}; }
+		Collector::Output operator()(Robot_outputs)const{ return Collector::Output{}; }	
 	};
 	Output_applicator output_applicator;
 

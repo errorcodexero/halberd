@@ -228,7 +228,6 @@ class To_crio
 	//Gyro *gyro;
 	PowerDistributionPanel *power;
 	Compressor *compressor;
-	//CANTalon test;
 	CANTalon test1;
 	CANTalon test2;
 public:
@@ -532,7 +531,6 @@ public:
 			//in.digital_io[i]=digital_io[i].get();
 		}
 		in.digital_io=digital_io.get();
-		//for(unsigned i=0;i<Robot_inputs::TALON_SRX_INPUTS;i++){
 		auto f=[&](int index,CANTalon& test) {
 			in.talon_srx[index].fwd_limit_switch=test.IsFwdLimitSwitchClosed();
 			in.talon_srx[index].rev_limit_switch=test.IsRevLimitSwitchClosed();
