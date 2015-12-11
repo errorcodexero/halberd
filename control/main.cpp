@@ -73,8 +73,8 @@ Toplevel::Goal Main::teleop(
 	const float SLOW_TURNING=.8;
 
 	if(fabs(goal.left)<LIMIT && fabs(goal.right)<LIMIT){
-		if(!nudges[2].timer.done()); //goal.theta=-ROTATE_NUDGE_POWER;
-		else if(!nudges[3].timer.done()); //goal.theta=ROTATE_NUDGE_POWER;
+		if(!nudges[2].timer.done()); 
+		else if(!nudges[3].timer.done()); 
 		else{
 			goal.left=(set_drive_speed(real_turning,turbo_button,slow_button))*SLOW_TURNING;
 			goal.right=(set_drive_speed(-real_turning,turbo_button,slow_button))*SLOW_TURNING;	
@@ -94,18 +94,6 @@ Toplevel::Goal Main::teleop(
 	goals.drive=goal;
 		
 	return goals;
-}
-
-unsigned pdb_location1(Drivebase::Motor m){
-	#define X(NAME,INDEX) if(m==Drivebase::NAME) return INDEX;
-	//WILL NEED CORRECT VALUES
-	X(LEFT1,0)
-	X(LEFT2,1)
-	X(RIGHT1,2)
-	X(RIGHT2,3)
-	#undef X
-	assert(0);
-	//assert(m>=0 && m<Drivebase::MOTORS);
 }
 
 Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel::Status_detail /*status*/,Time since_switch, Panel oi_panel){
@@ -184,7 +172,6 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 		case Mode::AUTO_MOVE:
 			goals.drive.left=-.45;
 			goals.drive.right=-.45;
-			//goals.drive.theta=0;
 			break;
 		case Mode::AUTO_GRAB:
 			
@@ -192,7 +179,6 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 		case Mode::AUTO_BACK:
 			goals.drive.left=-.6;
 			goals.drive.right=-.6;
-			//goals.drive.theta=0;
 			break;
 		case Mode::AUTO_RELEASE:
 			break;	
