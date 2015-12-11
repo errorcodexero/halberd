@@ -1,0 +1,3 @@
+g++ --std=c++11 -Wall -Werror -DCOLLECTOR_TEST \
+	collector.cpp \
+	-o collector 2>&1 && ./collector
