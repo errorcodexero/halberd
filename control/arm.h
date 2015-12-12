@@ -13,35 +13,32 @@ struct Arm{
 	enum class Goal{UP,DOWN};
 	enum class Status{UP,MID,DOWN};
 
-	struct Status_detail{
-		
-	};
+	typedef Status Status_detail;
 	
 	struct Input{
 		bool topLimit, bottomLimit;
 	};
 
 	struct Input_reader{
-		Input operator()(Robot_inputs)const{
-			return Input{0,0};
-		}
-		Robot_inputs operator()(Robot_inputs a,Input)const{
-			return a;
-		}
+		Input operator()(Robot_inputs)const;
+		Robot_inputs operator()(Robot_inputs,Input)const;
 	};
 
-	typedef double Output;
+	enum class Output{UP,OFF,DOWN};
 
 	struct Output_applicator{
 		Robot_outputs operator()(Robot_outputs r, Output out)const{return r;}
-		Output operator()(Robot_outputs r)const{ return 0;}
+		Output operator()(Robot_outputs r)const{ return Arm::Output::OFF;}
 	};
 
 	struct Estimator{
-		Status_detail get()const{
-			return Status_detail{};
-		}
-		void update(Time t, Input in, Output out){};
+		Time start_time,last_time;
+		Output last_output;
+
+		Estimator():start_time(-1),last_time(-1){}
+
+		void update(Time t, Input in, Output out);
+		Status_detail get()const;
 	};
 	Estimator estimator;
 	Input_reader input_reader;
@@ -53,7 +50,6 @@ ostream& operator<<(ostream&,Arm::Input);
 ostream& operator<<(ostream&,Arm::Input_reader);
 ostream& operator<<(ostream&,Arm::Output_applicator);
 ostream& operator<<(ostream&,Arm::Status);
-ostream& operator<<(ostream&,Arm::Status_detail);
 ostream& operator<<(ostream&,Arm::Estimator);
 ostream& operator<<(ostream&,Arm::Goal);
 ostream& operator<<(ostream&,Arm);
@@ -64,7 +60,6 @@ set<Arm::Input> examples(Arm::Input*);
 set<Arm::Output> examples(Arm::Output*);
 set<Arm::Goal> examples(Arm::Goal*);
 set<Arm::Status> examples(Arm::Status*);
-set<Arm::Status_detail> examples(Arm::Status_detail*);
 
 Arm::Output control(Arm::Status_detail,Arm::Goal goal);
 Arm::Status status(Arm::Status_detail);
