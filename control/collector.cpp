@@ -35,14 +35,14 @@ set<Collector::Status_detail> examples(Collector::Status_detail*){
 	return set<Collector::Status_detail>{Collector::Status_detail{}};
 }
 set<Collector::Output> examples(Collector::Output*){ 
-	return set<Collector::Output>{1,0,-1};
+	return set<Collector::Output>{1,0,-1};//TODO: check if correct once mounted
 }
 
 
 Collector::Output control(Collector::Status_detail, Collector::Goal goal){
-	if(goal==Collector::Goal::FORWARD)return Collector::Output{1.0};
+	if(goal==Collector::Goal::FORWARD)return Collector::Output{1.0};//TODO: check if correct once mounted
 	if(goal==Collector::Goal::OFF)return Collector::Output{0.0};
-	if(goal==Collector::Goal::REVERSE)return Collector::Output{-1.0};
+	if(goal==Collector::Goal::REVERSE)return Collector::Output{-1.0};//TODO: check if correct once mounted
 	assert(0);
 }
 
