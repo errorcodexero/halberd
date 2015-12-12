@@ -1,23 +1,22 @@
-#include <iostream>
 #include "collector.h"
 
 using namespace std;
 
 ostream& operator<<(ostream& o, Collector::Goal a){
-	if(a==Collector::Goal::OFF) return o<<"Goal(off)";
-	if(a==Collector::Goal::REVERSE) return o<<"Goal(reverse)";
-	if(a==Collector::Goal::FORWARD) return o<<"Goal(forward)";
+	if(a==Collector::Goal::OFF) return o<<"Collector::Goal(OFF)";
+	if(a==Collector::Goal::REVERSE) return o<<"Collector::Goal(REVERSE)";
+	if(a==Collector::Goal::FORWARD) return o<<"Collector::Goal(FORWARD)";
 	assert(0);
 }
 
 ostream& operator<<(ostream& o, Collector a){
-	return o<<"Collector( goal("<<a.goal<<")";
+	return o<<"Collector()";
 }
 
 ostream& operator<<(ostream& o, Collector::Status_detail){ return o<<" ";}
 ostream& operator<<(ostream& o, Collector::Input){ return o<<" ";}
 
-bool operator==(Collector::Input,Collector::Input){ return true;}
+bool operator==(Collector::Input,Collector::Input){ return 1;}
 bool operator<(Collector::Input, Collector::Input){ return 1;}
 bool operator<(Collector::Status_detail, Collector::Status_detail){ return 1;}
 bool operator==(Collector::Status_detail, Collector::Status_detail){ return 1;}
