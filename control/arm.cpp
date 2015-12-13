@@ -27,21 +27,19 @@ ostream& operator<<(ostream& o,Arm::Goal g){
 	if(g==Arm::Goal::DOWN)return o<<"Arm::Goal(DOWN)";
 	assert(0);
 }
-ostream& operator<<(ostream& o,Arm) {
-	return o<<"Arm()";
+ostream& operator<<(ostream& o,Arm a) {
+	return o<<"Arm("<<a.estimator<<" "<<a.output_applicator<<")";
 }
 
 bool operator==(Arm::Input a,Arm::Input b){
-	return a.topLimit==b.topLimit;
+	return (a.topLimit==b.topLimit && a.bottomLimit==b.bottomLimit);
 }
 bool operator<(Arm::Input a,Arm::Input b){
-	return 1;
+	return (a.topLimit<b.topLimit && a.bottomLimit<b.bottomLimit);
 }
 
 bool operator<(Arm::Status_detail a, Arm::Status_detail b){
-	if(a==Arm::Status_detail::DOWN && (b==Arm::Status_detail::MID || b==Arm::Status_detail::UP))return true;
-	if(a==Arm::Status_detail::MID && b==Arm::Status_detail::UP)return true;
-	return false;
+	return ((a==Arm::Status_detail::DOWN && (b==Arm::Status_detail::MID || b==Arm::Status_detail::UP)) || (a==Arm::Status_detail::MID && b==Arm::Status_detail::UP));
 }
 
 Robot_inputs Arm::Input_reader::operator()(Robot_inputs a, Arm::Input i)const {
