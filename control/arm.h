@@ -46,6 +46,7 @@ struct Arm{
 };
 
 ostream& operator<<(ostream&,Arm::Input);
+ostream& operator<<(ostream&,Arm::Output_applicator);
 ostream& operator<<(ostream&,Arm::Output);
 ostream& operator<<(ostream&,Arm::Status);
 ostream& operator<<(ostream&,Arm::Goal);
