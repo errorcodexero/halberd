@@ -2,8 +2,12 @@
 
 using namespace std;
 
-ostream& operator<<(ostream& o,Arm::Input i) {return o<<"Arm::Input("<<i.topLimit<<" "<<i.bottomLimit<<")";}
-ostream& operator<<(ostream& o,Arm::Input_reader) {return o<<" ";}
+ostream& operator<<(ostream& o,Arm::Input i){
+	return o<<"Arm::Input("<<i.topLimit<<" "<<i.bottomLimit<<")";
+}
+ostream& operator<<(ostream& o,Arm::Input_reader){
+	return o<<" ";
+}
 ostream& operator<<(ostream& o,Arm::Output_applicator) {return o<<" ";}
 ostream& operator<<(ostream& o,Arm::Output out){
 	if(out==Arm::Output::UP)return o<<"Arm::Output(UP)";
@@ -34,8 +38,10 @@ bool operator<(Arm::Input a,Arm::Input b){
 	return 1;
 }
 
-bool operator<(Arm::Status_detail, Arm::Status_detail){
-	return true;
+bool operator<(Arm::Status_detail a, Arm::Status_detail b){
+	if(a==Arm::Status_detail::DOWN && (b==Arm::Status_detail::MID || b==Arm::Status_detail::UP))return true;
+	if(a==Arm::Status_detail::MID && b==Arm::Status_detail::UP)return true;
+	return false;
 }
 
 Robot_inputs Arm::Input_reader::operator()(Robot_inputs a, Arm::Input i)const {
@@ -82,11 +88,11 @@ set<Arm::Output> examples(Arm::Output*){
 set<Arm::Goal> examples(Arm::Goal*){
 	return set<Arm::Goal>{Arm::Goal::UP,Arm::Goal::DOWN};
 }
-set<Arm::Status_detail> examples(Arm::Status_detail*){
+set<Arm::Status> examples(Arm::Status*){
 	set<Arm::Status_detail> s;
-	s.insert(Arm::Status_detail::UP);
-	s.insert(Arm::Status_detail::MID);
-	s.insert(Arm::Status_detail::DOWN);
+	s.insert(Arm::Status::UP);
+	s.insert(Arm::Status::MID);
+	s.insert(Arm::Status::DOWN);
 	return s;
 }
 
