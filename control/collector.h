@@ -9,27 +9,19 @@
 
 using namespace std;
 
-const int COLLECTOR_ADDRESS=3;
-const double FORWARD=1, OFF=0, REVERSE=-1;//WILL NEED REAL VALUES
-
 struct Collector{
-	enum class Goal{FORWARD,OFF,REVERSE};
-	Goal goal; 
+	enum class Goal{FORWARD,OFF,REVERSE}; 
 	
 	struct Status_detail{};
-	Status_detail status_detail;
 
 	typedef Status_detail Status;
-	Status status;
 
 	struct Input{};
-	Input input;
 	
 	struct Input_reader{
 		Collector::Input operator()(Robot_inputs)const;
 		Robot_inputs operator()(Robot_inputs a,Collector::Input)const;
 	};
-	Input_reader input_reader;
 
 	typedef double Output;
 	
@@ -37,14 +29,17 @@ struct Collector{
 		Robot_outputs operator()(Robot_outputs r,Collector::Output out)const;
 		Collector::Output operator()(Robot_outputs r)const;	
 	};
-	Output_applicator output_applicator;
 
 	struct Estimator{
 		Status_detail get()const;
 		void update(Time,Input,Output){};	
 	};
+
+	Goal goal;
+	Input_reader input_reader;
 	Estimator estimator;
-	
+	Output_applicator output_applicator; 
+
 	Collector():goal(Goal::OFF){}
 };
 
