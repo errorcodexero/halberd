@@ -2,6 +2,8 @@
 
 using namespace std;
 
+#define COLLECTOR_ADDRESS 3
+
 ostream& operator<<(ostream& o, Collector::Goal a){
 	if(a==Collector::Goal::OFF) return o<<"Collector::Goal(OFF)";
 	if(a==Collector::Goal::REVERSE) return o<<"Collector::Goal(REVERSE)";
@@ -47,14 +49,14 @@ set<Collector::Status_detail> examples(Collector::Status_detail*){
 	return set<Collector::Status_detail>{Collector::Status_detail{}};
 }
 set<Collector::Output> examples(Collector::Output*){ 
-	return set<Collector::Output>{FORWARD,OFF,REVERSE};
+	return set<Collector::Output>{1,0,-1};
 }
 
 
 Collector::Output control(Collector::Status_detail, Collector::Goal goal){
-	if(goal==Collector::Goal::FORWARD)return Collector::Output{FORWARD};
-	if(goal==Collector::Goal::OFF)return Collector::Output{OFF};
-	if(goal==Collector::Goal::REVERSE)return Collector::Output{REVERSE};
+	if(goal==Collector::Goal::FORWARD)return Collector::Output{1};
+	if(goal==Collector::Goal::OFF)return Collector::Output{0};
+	if(goal==Collector::Goal::REVERSE)return Collector::Output{-1};
 	assert(0);
 }
 
@@ -69,7 +71,6 @@ bool ready(Collector::Status, Collector::Goal){return 1;}
 int main(){
 	Collector a;
 	tester(a);
-	return 0;
 }
 
 #endif
