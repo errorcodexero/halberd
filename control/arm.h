@@ -27,15 +27,14 @@ struct Arm{
 	enum class Output{UP,OFF,DOWN};
 
 	struct Output_applicator{
-		Robot_outputs operator()(Robot_outputs r, Output out)const{return r;}
-		Output operator()(Robot_outputs r)const{ return Arm::Output::OFF;}
+		Robot_outputs operator()(Robot_outputs, Output)const;
+		Output operator()(Robot_outputs)const;
 	};
 
 	struct Estimator{
-		Time start_time,last_time;
-		Output last_output;
+		Status_detail last;
 
-		Estimator():start_time(-1),last_time(-1){}
+		Estimator():last(Status_detail::MID){}
 
 		void update(Time t, Input in, Output out);
 		Status_detail get()const;
@@ -47,11 +46,10 @@ struct Arm{
 };
 
 ostream& operator<<(ostream&,Arm::Input);
-ostream& operator<<(ostream&,Arm::Input_reader);
-ostream& operator<<(ostream&,Arm::Output_applicator);
+ostream& operator<<(ostream&,Arm::Output);
 ostream& operator<<(ostream&,Arm::Status);
-ostream& operator<<(ostream&,Arm::Estimator);
 ostream& operator<<(ostream&,Arm::Goal);
+ostream& operator<<(ostream&,Arm::Estimator);
 ostream& operator<<(ostream&,Arm);
 
 bool operator==(Arm::Input,Arm::Input);
