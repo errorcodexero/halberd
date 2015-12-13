@@ -9,12 +9,10 @@ ostream& operator<<(ostream& o, Collector::Goal a){
 	assert(0);
 }
 
-ostream& operator<<(ostream& o, Collector a){
-	return o<<"Collector()";
-}
+ostream& operator<<(ostream& o, Collector::Status){ return o<<"Collector::Status()";}
+ostream& operator<<(ostream& o, Collector::Input){ return o<<"Collector::Input()";}
+ostream& operator<<(ostream& o, Collector){ return o<<"Collector()";}
 
-ostream& operator<<(ostream& o, Collector::Status_detail){ return o<<" ";}
-ostream& operator<<(ostream& o, Collector::Input){ return o<<" ";}
 
 bool operator==(Collector::Input,Collector::Input){ return 1;}
 bool operator<(Collector::Input, Collector::Input){ return 1;}
