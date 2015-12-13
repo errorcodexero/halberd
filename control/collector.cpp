@@ -21,6 +21,21 @@ bool operator<(Collector::Input, Collector::Input){ return 1;}
 bool operator<(Collector::Status_detail, Collector::Status_detail){ return 1;}
 bool operator==(Collector::Status_detail, Collector::Status_detail){ return 1;}
 bool operator<(Collector::Input_reader, Collector::Input_reader){ return 1;}
+
+Collector::Input Collector::Input_reader::operator()(Robot_inputs)const{ return Collector::Input{};}
+
+Robot_inputs Collector::Input_reader::operator()(Robot_inputs a, Collector::Input)const{ return a;}
+
+Robot_outputs Collector::Output_applicator::operator()(Robot_outputs r, Collector::Output out)const{
+	r.pwm[3]=out;
+	return r;
+}
+
+Collector::Status_detail Collector::Estimator::get()const{ return Collector::Status_detail{};}
+
+Collector::Output Collector::Output_applicator::operator()(Robot_outputs r)const{
+	return r.pwm[3];
+}
 	
 set<Collector::Input> examples(Collector::Input*){
 	return set<Collector::Input>{Collector::Input{}};
