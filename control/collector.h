@@ -9,6 +9,9 @@
 
 using namespace std;
 
+const int COLLECTOR_ADDRESS=3;
+const double FORWARD=1, OFF=0, REVERSE=-1;//WILL NEED REAL VALUES
+
 struct Collector{
 	enum class Goal{FORWARD,OFF,REVERSE};
 	Goal goal; 
