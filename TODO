@@ -1,6 +1,9 @@
 HIGH PRIORITY:
 	-Bug fixes
-	-Add manipulator code
+	-Add arm override
+	-Talk to electrical about PWM for collector
+	-Talk to electrical about limit switches (aren't working)
+	-Fix velToPWM
 	
 
 NOT AS HIGH PRIORITY:
