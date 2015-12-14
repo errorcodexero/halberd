@@ -1,4 +1,5 @@
 #include "fixVictor.h"
+
 using namespace std;
 
 double pwmToVel(double x){
@@ -22,9 +23,19 @@ double error(FF fwd, FF rev){
 	return s;
 }
 
+float adjust_for_victor(float f){
+	if(fabs(f)<.05) return 0;
+	double out=pwmToVel(fabs(f))/13.2;
+	if(f<0) return -out;
+	return out;
+}
+
 #ifdef FIXVICTOR_TEST
 int main(){
 	cout<<error(pwmToVel,velToPwm)<<endl;
 	cout<<velToPwm(pwmToVel(.1))<<endl<<velToPwm(pwmToVel(.2))<<endl<<velToPwm(pwmToVel(.3))<<endl<<velToPwm(pwmToVel(.4))<<endl<<velToPwm(pwmToVel(.5))<<endl<<velToPwm(pwmToVel(.6))<<endl<<velToPwm(pwmToVel(.7))<<endl<<velToPwm(pwmToVel(.8))<<endl<<velToPwm(pwmToVel(.9))<<endl<<velToPwm(pwmToVel(1))<<endl;
+	for(float x=-1;x<=1.05;x+=.1){
+		cout<<x<<"\t"<<adjust_for_victor(x)<<"\n";
+	}
 }
 #endif

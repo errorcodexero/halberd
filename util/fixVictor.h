@@ -6,5 +6,6 @@
 
 double pwmToVel(double x);
 double velToPwm(double x);
+float adjust_for_victor(float);
 
 #endif

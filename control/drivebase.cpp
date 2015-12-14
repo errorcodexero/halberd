@@ -175,7 +175,7 @@ bool operator!=(Drivebase const& a,Drivebase const& b){
 }
 
 Drivebase::Output control(Drivebase::Status /*status*/,Drivebase::Goal goal){
-	return Drivebase::Output{goal.left,goal.right};//velToPwm(goal.left),velToPwm(goal.right)};
+	return Drivebase::Output{goal.left,goal.right};//{adjust_for_victor(goal.left),adjust_for_victor(goal.right)};//velToPwm(goal.left),velToPwm(goal.right)};
 }
 
 Drivebase::Status status(Drivebase::Status a){ return a; }
