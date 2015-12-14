@@ -38,8 +38,26 @@ ostream& operator<<(ostream& o,Arm a) {
 	return o<<"Arm("<<a.estimator<<" "<<a.output_applicator<<")";
 }
 
-bool operator==(Arm::Input a,Arm::Input b){
+bool operator==(Arm::Input const& a,Arm::Input const& b){
 	return (a.topLimit==b.topLimit) && (a.bottomLimit==b.bottomLimit);
+}
+bool operator!=(Arm::Input const& a,Arm::Input const& b){
+	return !(a==b);
+}
+bool operator==(Arm::Estimator const& a, Arm::Estimator const& b) {
+	return a.last == b.last;
+}
+bool operator!=(Arm::Estimator const& a, Arm::Estimator const& b) {
+	return !(a==b);
+}
+bool operator==(Arm::Output_applicator const&,Arm::Output_applicator const&) {
+	return 1;
+}
+bool operator==(Arm const& a,Arm const& b) {
+	return (a.estimator == b.estimator) && (a.output_applicator == b.output_applicator);
+}
+bool operator!=(Arm const& a,Arm const& b) {
+	return !(a==b);
 }
 bool operator<(Arm::Input a,Arm::Input b){
 	return (a.topLimit<b.topLimit) || ((a.topLimit==b.topLimit) && (a.bottomLimit<b.bottomLimit));
@@ -80,7 +98,7 @@ Arm::Output Arm::Output_applicator::operator()(Robot_outputs r)const{
 	return Output::OFF;
 }
 
-void Arm::Estimator::update(Time t, Arm::Input in, Arm::Output out) {
+void Arm::Estimator::update(Time, Arm::Input in, Arm::Output) {
 	if (in.topLimit) last = Status_detail::UP;
 	if (in.bottomLimit) last = Status_detail::DOWN;
 	if (!(in.topLimit || in.bottomLimit)) last = Status_detail::MID;

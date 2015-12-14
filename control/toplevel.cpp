@@ -135,7 +135,8 @@ Toplevel::Status::Status():
 		{Motor_check::Status::OK_,Motor_check::Status::OK_},
 		0
 	),
-	pump(Pump::Status::NOT_FULL)
+	pump(Pump::Status::NOT_FULL),
+	arm(Arm::Status::MID)
 {}
 
 bool operator==(Toplevel::Status a,Toplevel::Status b){
@@ -305,7 +306,8 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 	return {Toplevel::Status_detail{
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{},
-		Tote_sensors::Status_detail{}
+		Tote_sensors::Status_detail{},
+		Arm::Status_detail{}
 	}};
 }
 
@@ -321,7 +323,8 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
-		Tote_sensors::Input{0,0,0}
+		Tote_sensors::Input{0,0,0},
+		Arm::Input{false,false}
 	};
 	return {a};
 }
