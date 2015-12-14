@@ -53,7 +53,15 @@ ostream& operator<<(ostream&,Arm::Goal);
 ostream& operator<<(ostream&,Arm::Estimator);
 ostream& operator<<(ostream&,Arm);
 
-bool operator==(Arm::Input,Arm::Input);
+bool operator==(Arm::Input const&,Arm::Input const&);
+bool operator!=(Arm::Input const&,Arm::Input const&);
+bool operator==(Arm::Estimator const&, Arm::Estimator const&);
+bool operator!=(Arm::Estimator const&, Arm::Estimator const&);
+bool operator==(Arm::Output_applicator const&,Arm::Output_applicator const&);
+bool operator==(Arm const&,Arm const&);
+bool operator!=(Arm const&,Arm const&);
+
+bool operator<(Arm::Input,Arm::Input);
 
 set<Arm::Input> examples(Arm::Input*);
 set<Arm::Output> examples(Arm::Output*);
