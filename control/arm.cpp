@@ -80,7 +80,7 @@ Arm::Output Arm::Output_applicator::operator()(Robot_outputs r)const{
 	return Output::OFF;
 }
 
-void Arm::Estimator::update(Time t, Arm::Input in, Arm::Output out) {
+void Arm::Estimator::update(Time, Arm::Input in, Arm::Output) {
 	if (in.topLimit) last = Status_detail::UP;
 	if (in.bottomLimit) last = Status_detail::DOWN;
 	if (!(in.topLimit || in.bottomLimit)) last = Status_detail::MID;

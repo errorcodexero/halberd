@@ -305,7 +305,8 @@ set<Toplevel::Status_detail> examples(Toplevel::Status_detail*){
 	return {Toplevel::Status_detail{
 		*examples((Drivebase::Status_detail*)0).begin(),
 		Pump::Status_detail{},
-		Tote_sensors::Status_detail{}
+		Tote_sensors::Status_detail{},
+		Collector::Status_detail{}
 	}};
 }
 
@@ -321,7 +322,8 @@ set<Toplevel::Input> examples(Toplevel::Input*){
 	Toplevel::Input a{
 		*examples((Drivebase::Input*)0).begin(),
 		Pump::Input{},
-		Tote_sensors::Input{0,0,0}
+		Tote_sensors::Input{0,0,0},
+		Collector::Input{}
 	};
 	return {a};
 }
