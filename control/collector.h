@@ -20,14 +20,14 @@ struct Collector{
 	
 	struct Input_reader{
 		Collector::Input operator()(Robot_inputs)const;
-		Robot_inputs operator()(Robot_inputs a,Collector::Input)const;
+		Robot_inputs operator()(Robot_inputs,Collector::Input)const;
 	};
 
 	typedef double Output;
 	
 	struct Output_applicator{
-		Robot_outputs operator()(Robot_outputs r,Collector::Output out)const;
-		Collector::Output operator()(Robot_outputs r)const;	
+		Robot_outputs operator()(Robot_outputs,Collector::Output)const;
+		Collector::Output operator()(Robot_outputs)const;	
 	};
 
 	struct Estimator{
@@ -35,12 +35,9 @@ struct Collector{
 		void update(Time,Input,Output){};	
 	};
 
-	Goal goal;
 	Input_reader input_reader;
 	Estimator estimator;
 	Output_applicator output_applicator; 
-
-	Collector():goal(Goal::OFF){}
 };
 
 ostream& operator<<(ostream&,Collector::Goal);
@@ -49,10 +46,18 @@ ostream& operator<<(ostream&,Collector::Status_detail);
 ostream& operator<<(ostream&,Collector::Input);
 
 bool operator==(Collector::Input,Collector::Input);
+bool operator!=(Collector::Input,Collector::Input);
 bool operator<(Collector::Input, Collector::Input);
 bool operator<(Collector::Status_detail, Collector::Status_detail);
 bool operator==(Collector::Status_detail, Collector::Status_detail);
+bool operator!=(Collector::Status_detail, Collector::Status_detail);
 bool operator<(Collector::Input_reader, Collector::Input_reader);
+bool operator==(Collector::Estimator, Collector::Estimator);
+bool operator!=(Collector::Estimator, Collector::Estimator);
+bool operator==(Collector::Input_reader,Collector::Input_reader);
+bool operator==(Collector::Output_applicator,Collector::Output_applicator);
+bool operator==(Collector,Collector);
+bool operator!=(Collector,Collector);
 
 set<Collector::Input> examples(Collector::Input*);
 set<Collector::Goal> examples(Collector::Goal*);

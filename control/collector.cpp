@@ -15,12 +15,19 @@ ostream& operator<<(ostream& o, Collector::Status){ return o<<"Collector::Status
 ostream& operator<<(ostream& o, Collector::Input){ return o<<"Collector::Input()";}
 ostream& operator<<(ostream& o, Collector){ return o<<"Collector()";}
 
-
 bool operator==(Collector::Input,Collector::Input){ return 1;}
-bool operator<(Collector::Input, Collector::Input){ return 1;}
-bool operator<(Collector::Status_detail, Collector::Status_detail){ return 1;}
+bool operator!=(Collector::Input,Collector::Input){ return 0;}
+bool operator<(Collector::Input, Collector::Input){ return 0;}
+bool operator<(Collector::Status_detail, Collector::Status_detail){ return 0;}
 bool operator==(Collector::Status_detail, Collector::Status_detail){ return 1;}
-bool operator<(Collector::Input_reader, Collector::Input_reader){ return 1;}
+bool operator!=(Collector::Status_detail, Collector::Status_detail){ return 0;} 
+bool operator<(Collector::Input_reader, Collector::Input_reader){ return 0;}
+bool operator==(Collector::Estimator, Collector::Estimator){ return 1;}
+bool operator!=(Collector::Estimator, Collector::Estimator){ return 0;}
+bool operator==(Collector::Input_reader,Collector::Input_reader){ return 1;}
+bool operator==(Collector::Output_applicator,Collector::Output_applicator){return 1;}
+bool operator==(Collector a, Collector b){ return (a.input_reader==b.input_reader && a.estimator==b.estimator && a.output_applicator==b.output_applicator);}
+bool operator!=(Collector a, Collector b){ return !(a==b);}
 
 Collector::Input Collector::Input_reader::operator()(Robot_inputs)const{ return Collector::Input{};}
 
