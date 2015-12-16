@@ -93,7 +93,17 @@ Toplevel::Goal Main::teleop(
 	
 	goals.drive=goal;
 	if (gunner_joystick.button[Gamepad_button::A]) goals.arm = Arm::Goal::DOWN;
-	if (gunner_joystick.button[Gamepad_button::Y]) goals.arm = Arm::Goal::UP;
+	else if(gunner_joystick.button[Gamepad_button::Y]) goals.arm = Arm::Goal::UP;
+	/*if (gunner_joystick.button[Gamepad_button::LB]) {
+		goals.arm = Arm::Goal::DOWN;
+		manual_button = true;	
+	} else if (gunner_joystick.button[Gamepad_button::RB]) {
+		goals.arm = Arm::Goal::UP;
+		manual_button = true;
+	} else if (manual_button) {
+		goals.arm = Arm::Goal::STOP;
+		manual_button = false;
+	}*/
 	goals.collector=gunner_joystick.button[Gamepad_button::X]?Collector::Goal::FORWARD:(gunner_joystick.button[Gamepad_button::B]?Collector::Goal::REVERSE:Collector::Goal::OFF);	
 	return goals;
 }

@@ -27,6 +27,7 @@ ostream& operator<<(ostream& o,Arm::Status s){
 ostream& operator<<(ostream& o,Arm::Goal g){
 	if(g==Arm::Goal::UP)return o<<"Arm::Goal(UP)";
 	if(g==Arm::Goal::DOWN)return o<<"Arm::Goal(DOWN)";
+	if(g==Arm::Goal::STOP)return o<<"Arm::Goal(STOP)";
 	assert(0);
 }
 ostream& operator<<(ostream& o,Arm::Estimator e){
@@ -82,9 +83,9 @@ Robot_outputs Arm::Output_applicator::operator()(Robot_outputs r, Output out)con
 			case Output::OFF:
 				return Relay_output::_00;
 			case Output::UP:
-				return Relay_output::_10;
-			case Output::DOWN:
 				return Relay_output::_01;
+			case Output::DOWN:
+				return Relay_output::_10;
 			default:
 				assert(0);
 		}
@@ -93,8 +94,8 @@ Robot_outputs Arm::Output_applicator::operator()(Robot_outputs r, Output out)con
 }
 
 Arm::Output Arm::Output_applicator::operator()(Robot_outputs r)const{
-	if (r.relay[ARM_RELAY] == Relay_output::_10) return Output::UP;
-	if (r.relay[ARM_RELAY] == Relay_output::_01) return Output::DOWN;
+	if (r.relay[ARM_RELAY] == Relay_output::_01) return Output::UP;
+	if (r.relay[ARM_RELAY] == Relay_output::_10) return Output::DOWN;
 	return Output::OFF;
 }
 
@@ -115,14 +116,14 @@ set<Arm::Output> examples(Arm::Output*){
 	return set<Arm::Output>{Arm::Output::UP,Arm::Output::OFF,Arm::Output::DOWN};
 }
 set<Arm::Goal> examples(Arm::Goal*){
-	return set<Arm::Goal>{Arm::Goal::UP,Arm::Goal::DOWN};
+	return set<Arm::Goal>{Arm::Goal::UP,Arm::Goal::DOWN,Arm::Goal::STOP};
 }
 set<Arm::Status> examples(Arm::Status*){
 	return set<Arm::Status_detail>{Arm::Status::UP,Arm::Status::MID,Arm::Status::DOWN};
 }
 
 Arm::Output control(Arm::Status_detail status,Arm::Goal goal) {
-	if ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP))return Arm::Output::OFF;
+	if ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP) || goal==Arm::Goal::STOP)return Arm::Output::OFF;
 	return (goal==Arm::Goal::UP)?Arm::Output::UP:Arm::Output::DOWN;
 }
 
@@ -131,7 +132,7 @@ Arm::Status status(Arm::Status_detail a) {
 }
 
 bool ready(Arm::Status status,Arm::Goal goal) {
-	return ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP));
+	return ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP) || (goal==Arm::Goal::STOP));
 }
 
 #ifdef ARM_TEST

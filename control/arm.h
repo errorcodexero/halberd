@@ -10,7 +10,7 @@
 using namespace std;
 
 struct Arm{
-	enum class Goal{UP,DOWN};
+	enum class Goal{UP,DOWN,STOP};
 	enum class Status{UP,MID,DOWN};
 
 	typedef Status Status_detail;

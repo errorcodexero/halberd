@@ -34,6 +34,8 @@ struct Main{
 	};
 	Nudge nudges[4];//Forward, Backward, Clockwise, Counter-clockwise
 		
+	bool manual_button;
+
 	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail&);
 	Main();
 	Robot_outputs operator()(Robot_inputs,std::ostream& = std::cerr);
