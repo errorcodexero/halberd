@@ -46,7 +46,7 @@ Toplevel::Goal Main::teleop(
 	Joystick_data const& main_joystick,
 	Joystick_data const&  gunner_joystick,
 	Panel const&  /*oi_panel*/,
-	Toplevel::Status_detail& toplevel_status
+	Toplevel::Status_detail& /*toplevel_status*/
 ){
 	Toplevel::Goal goals;
 
@@ -121,11 +121,11 @@ Toplevel::Goal Main::teleop(
 	return goals;
 }
 
-Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel::Status_detail /*status*/,Time since_switch, Panel oi_panel){
+Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel::Status_detail /*status*/,Time since_switch, Panel /*oi_panel*/){
 	switch(m){
 		case Main::Mode::TELEOP:
 			if(autonomous_start){
-				if (oi_panel.in_use) {
+				/*if (oi_panel.in_use) {
 					switch(oi_panel.auto_mode){ 
 						case Panel::Auto_mode::CAN_GRAB:
 							return Main::Mode::AUTO_GRAB;
@@ -137,7 +137,8 @@ Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel
 					}
 				} else {
 					return Main::Mode::AUTO_GRAB;
-				}
+				}*/
+				return Main::Mode::TELEOP;
 			}
 			return m;
 		case Main::Mode::AUTO_MOVE:
