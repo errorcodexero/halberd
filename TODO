@@ -1,11 +1,10 @@
 HIGH PRIORITY:
-	-Bug fixes
-	-Add arm override
-	-Fix velToPWM
+	- Bug fixes
+	- Autonomous
 	
 
 NOT AS HIGH PRIORITY:
-	-Autonomous
+	- Fix velToPwm
 	
 		
 NICE THINGS TO HAVE:
