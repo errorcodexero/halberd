@@ -91,19 +91,21 @@ Toplevel::Goal Main::teleop(
 		nudges[i].timer.update(in.now,1);
 	}
 	
+	
+
 	goals.drive=goal;
-	if (gunner_joystick.button[Gamepad_button::A]) goals.arm = Arm::Goal::DOWN;
-	else if(gunner_joystick.button[Gamepad_button::Y]) goals.arm = Arm::Goal::UP;
-	/*if (gunner_joystick.button[Gamepad_button::LB]) {
-		goals.arm = Arm::Goal::DOWN;
-		manual_button = true;	
+	if (gunner_joystick.button[Gamepad_button::A]) goals.arm = Arm::Goal::DOWN_AUTO;
+	else if(gunner_joystick.button[Gamepad_button::Y]) goals.arm = Arm::Goal::UP_AUTO;
+	if (gunner_joystick.button[Gamepad_button::LB]) {
+		goals.arm = Arm::Goal::UP_MANUAL;
+		manual_button = true;
 	} else if (gunner_joystick.button[Gamepad_button::RB]) {
-		goals.arm = Arm::Goal::UP;
+		goals.arm = Arm::Goal::DOWN_MANUAL;
 		manual_button = true;
 	} else if (manual_button) {
 		goals.arm = Arm::Goal::STOP;
 		manual_button = false;
-	}*/
+	}
 	goals.collector=gunner_joystick.button[Gamepad_button::X]?Collector::Goal::FORWARD:(gunner_joystick.button[Gamepad_button::B]?Collector::Goal::REVERSE:Collector::Goal::OFF);	
 	return goals;
 }
@@ -202,7 +204,11 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 
 	Toplevel::Output r_out=control(toplevel_status,goals); 
 
+	auto lb=gunner_joystick.button[Gamepad_button::LB];
+	auto rb=gunner_joystick.button[Gamepad_button::RB];
+	r_out.arm=lb?Arm::Output::UP:(rb?Arm::Output::DOWN:Arm::Output::OFF);
 	auto r=toplevel.output_applicator(Robot_outputs{},r_out);
+
 	r=force(r);
 	auto input=toplevel.input_reader(in);
 

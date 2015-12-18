@@ -25,8 +25,10 @@ ostream& operator<<(ostream& o,Arm::Status s){
 	assert(0);
 }
 ostream& operator<<(ostream& o,Arm::Goal g){
-	if(g==Arm::Goal::UP)return o<<"Arm::Goal(UP)";
-	if(g==Arm::Goal::DOWN)return o<<"Arm::Goal(DOWN)";
+	if(g==Arm::Goal::UP_AUTO)return o<<"Arm::Goal(UP_AUTO)";
+	if(g==Arm::Goal::DOWN_AUTO)return o<<"Arm::Goal(DOWN_AUTO)";
+	if(g==Arm::Goal::UP_MANUAL)return o<<"Arm::Goal(UP_MANUAL)";
+	if(g==Arm::Goal::DOWN_MANUAL)return o<<"Arm::Goal(DOWN_MANUAL)";
 	if(g==Arm::Goal::STOP)return o<<"Arm::Goal(STOP)";
 	assert(0);
 }
@@ -116,15 +118,15 @@ set<Arm::Output> examples(Arm::Output*){
 	return set<Arm::Output>{Arm::Output::UP,Arm::Output::OFF,Arm::Output::DOWN};
 }
 set<Arm::Goal> examples(Arm::Goal*){
-	return set<Arm::Goal>{Arm::Goal::UP,Arm::Goal::DOWN,Arm::Goal::STOP};
+	return set<Arm::Goal>{Arm::Goal::UP_AUTO,Arm::Goal::DOWN_AUTO,Arm::Goal::UP_MANUAL,Arm::Goal::DOWN_MANUAL,Arm::Goal::STOP};
 }
 set<Arm::Status> examples(Arm::Status*){
 	return set<Arm::Status_detail>{Arm::Status::UP,Arm::Status::MID,Arm::Status::DOWN};
 }
 
 Arm::Output control(Arm::Status_detail status,Arm::Goal goal) {
-	if ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP) || goal==Arm::Goal::STOP)return Arm::Output::OFF;
-	return (goal==Arm::Goal::UP)?Arm::Output::UP:Arm::Output::DOWN;
+	if ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN_AUTO) || (status==Arm::Status::UP && goal==Arm::Goal::UP_AUTO) || goal==Arm::Goal::STOP)return Arm::Output::OFF;
+	return (goal==Arm::Goal::UP_AUTO || goal==Arm::Goal::UP_MANUAL) ? Arm::Output::UP : Arm::Output::DOWN;
 }
 
 Arm::Status status(Arm::Status_detail a) {
@@ -132,7 +134,7 @@ Arm::Status status(Arm::Status_detail a) {
 }
 
 bool ready(Arm::Status status,Arm::Goal goal) {
-	return ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN) || (status==Arm::Status::UP && goal==Arm::Goal::UP) || (goal==Arm::Goal::STOP));
+	return ((status==Arm::Status::DOWN && goal==Arm::Goal::DOWN_AUTO) || (status==Arm::Status::UP && goal==Arm::Goal::UP_AUTO) || (goal==Arm::Goal::STOP));
 }
 
 #ifdef ARM_TEST

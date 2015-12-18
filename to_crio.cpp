@@ -217,7 +217,7 @@ class To_crio
 	Solenoid *solenoid[Robot_outputs::SOLENOIDS];
 	DIO_controls digital_io;
 	VictorSP *pwm[Robot_outputs::PWMS];
-	//Relay *relay[Robot_outputs::RELAYS];
+	Relay *relay[Robot_outputs::RELAYS];
 	AnalogInput *analog_in[Robot_inputs::ANALOG_INPUTS];
 	int error_code;
 	USER_CODE main;
@@ -255,8 +255,8 @@ public:
 		}
 
 		for(unsigned i=0;i<Robot_outputs::RELAYS;i++){
-			//relay[i]=new Relay(i);
-			//if(!relay[i]) error_code|=8;
+			relay[i]=new Relay(i);
+			if(!relay[i]) error_code|=8;
 		}
 
 		for(unsigned i=0;i<Robot_inputs::ANALOG_INPUTS;i++){
@@ -355,16 +355,16 @@ public:
 		return 0;
 	}
 
-	int set_relay(unsigned i,Relay_output /*out*/){
+	int set_relay(unsigned i,Relay_output out){
 		if(i>=Robot_outputs::RELAYS) return 1;
-		/*if(!relay[i]) return 2;
+		if(!relay[i]) return 2;
 		relay[i]->Set([=](){
 			if(out==Relay_output::_00) return Relay::kOff;
-			if(out==Relay_output::_01) return Relay::kOn;
+			if(out==Relay_output::_01) return Relay::kReverse;
 			if(out==Relay_output::_10) return Relay::kForward;
 			//Assuming RELAY_11
 			return Relay::kReverse;
-		}());*/
+		}());
 		return 0;
 	}
 
