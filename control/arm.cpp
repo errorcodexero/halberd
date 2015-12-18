@@ -74,8 +74,8 @@ Robot_inputs Arm::Input_reader::operator()(Robot_inputs a, Arm::Input i)const {
 
 Arm::Input Arm::Input_reader::operator()(Robot_inputs r)const {
 	return Arm::Input{
-		r.digital_io.in[TOP_LIMIT_DIO]==Digital_in::_1,
-		r.digital_io.in[BOTTOM_LIMIT_DIO]==Digital_in::_1
+		r.digital_io.in[TOP_LIMIT_DIO]==Digital_in::_0,
+		r.digital_io.in[BOTTOM_LIMIT_DIO]==Digital_in::_0
 	};
 }
 

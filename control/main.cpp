@@ -20,7 +20,7 @@ ostream& operator<<(ostream& o,Main::Mode a){
 
 
 //todo: at some point, might want to make this whatever is right to start autonomous mode.
-Main::Main():mode(Mode::TELEOP),autonomous_start(0){}
+Main::Main():mode(Mode::TELEOP),autonomous_start(0),button_mode(Button_mode::MANUAL){}
 
 double set_drive_speed(double a,double boost,double slow){
 	static const float DEFAULT_SPEED=.35;//Change these value to change the default speed
@@ -46,7 +46,7 @@ Toplevel::Goal Main::teleop(
 	Joystick_data const& main_joystick,
 	Joystick_data const&  gunner_joystick,
 	Panel const&  /*oi_panel*/,
-	Toplevel::Status_detail& /*toplevel_status*/
+	Toplevel::Status_detail& toplevel_status
 ){
 	Toplevel::Goal goals;
 
@@ -94,19 +94,30 @@ Toplevel::Goal Main::teleop(
 	
 
 	goals.drive=goal;
-	if (gunner_joystick.button[Gamepad_button::A]) goals.arm = Arm::Goal::DOWN_AUTO;
-	else if(gunner_joystick.button[Gamepad_button::Y]) goals.arm = Arm::Goal::UP_AUTO;
+	if (gunner_joystick.button[Gamepad_button::Y]) button_mode = Button_mode::AUTO_UP;
+	else if(gunner_joystick.button[Gamepad_button::A]) button_mode = Button_mode::AUTO_DOWN;
 	if (gunner_joystick.button[Gamepad_button::LB]) {
 		goals.arm = Arm::Goal::UP_MANUAL;
-		manual_button = true;
+		button_mode = Button_mode::MANUAL;
 	} else if (gunner_joystick.button[Gamepad_button::RB]) {
 		goals.arm = Arm::Goal::DOWN_MANUAL;
-		manual_button = true;
-	} else if (manual_button) {
+		button_mode = Button_mode::MANUAL;
+	} else if (button_mode == Button_mode::MANUAL) {
 		goals.arm = Arm::Goal::STOP;
-		manual_button = false;
 	}
-	goals.collector=gunner_joystick.button[Gamepad_button::X]?Collector::Goal::FORWARD:(gunner_joystick.button[Gamepad_button::B]?Collector::Goal::REVERSE:Collector::Goal::OFF);	
+	goals.arm = [&]{
+		switch (button_mode) {
+			case Button_mode::AUTO_UP:
+				return Arm::Goal::UP_AUTO;
+			case Button_mode::AUTO_DOWN:
+				return Arm::Goal::DOWN_AUTO;
+			case Button_mode::MANUAL:
+				return goals.arm;
+			default:
+				assert(0);
+		}
+	}();
+	goals.collector=gunner_joystick.button[Gamepad_button::X]?Collector::Goal::FORWARD:(gunner_joystick.button[Gamepad_button::B]?Collector::Goal::REVERSE:Collector::Goal::OFF);
 	return goals;
 }
 
@@ -204,9 +215,9 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 
 	Toplevel::Output r_out=control(toplevel_status,goals); 
 
-	auto lb=gunner_joystick.button[Gamepad_button::LB];
+	/*auto lb=gunner_joystick.button[Gamepad_button::LB];
 	auto rb=gunner_joystick.button[Gamepad_button::RB];
-	r_out.arm=lb?Arm::Output::UP:(rb?Arm::Output::DOWN:Arm::Output::OFF);
+	r_out.arm=lb?Arm::Output::UP:(rb?Arm::Output::DOWN:Arm::Output::OFF);*/
 	auto r=toplevel.output_applicator(Robot_outputs{},r_out);
 
 	r=force(r);

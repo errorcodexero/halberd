@@ -34,7 +34,8 @@ struct Main{
 	};
 	Nudge nudges[4];//Forward, Backward, Clockwise, Counter-clockwise
 		
-	bool manual_button;
+	enum class Button_mode{MANUAL,AUTO_UP,AUTO_DOWN};
+	Button_mode button_mode;
 
 	Toplevel::Goal teleop(Robot_inputs const&,Joystick_data const&,Joystick_data const&,Panel const&,Toplevel::Status_detail&);
 	Main();
