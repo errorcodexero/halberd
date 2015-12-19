@@ -46,7 +46,7 @@ Toplevel::Goal Main::teleop(
 	Joystick_data const& main_joystick,
 	Joystick_data const&  gunner_joystick,
 	Panel const&  /*oi_panel*/,
-	Toplevel::Status_detail& /*toplevel_status*/
+	Toplevel::Status_detail& toplevel_status
 ){
 	Toplevel::Goal goals;
 
@@ -118,6 +118,7 @@ Toplevel::Goal Main::teleop(
 		}
 	}();
 	goals.collector=gunner_joystick.button[Gamepad_button::X]?Collector::Goal::FORWARD:(gunner_joystick.button[Gamepad_button::B]?Collector::Goal::REVERSE:Collector::Goal::OFF);
+	cout<<toplevel_status.arm<<"\n";
 	return goals;
 }
 
