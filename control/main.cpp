@@ -144,16 +144,6 @@ Main::Mode next_mode(Main::Mode m,bool autonomous,bool autonomous_start,Toplevel
 		case Main::Mode::AUTO_MOVE:
 			//encoders? going to use time for now
 			if(!autonomous || since_switch>1) return Main::Mode::TELEOP;
-			return m;
-		case Main::Mode::AUTO_GRAB:
-			if(!autonomous) return Main::Mode::TELEOP;
-			return m;
-		case Main::Mode::AUTO_BACK:
-			if(!autonomous) return Main::Mode::TELEOP;
-			//timer is up - could use encoders once those work
-			if(since_switch>1.5) return Main::Mode::AUTO_RELEASE;
-			return m;
-		case Main::Mode::AUTO_RELEASE:
 			return m;	
 		default: assert(0);
 	}
@@ -196,17 +186,8 @@ Robot_outputs Main::operator()(Robot_inputs in,ostream&){
 			goals=teleop(in,main_joystick,gunner_joystick,oi_panel,toplevel_status);
 			break;
 		case Mode::AUTO_MOVE:
-			goals.drive.left=-.45;
-			goals.drive.right=-.45;
-			break;
-		case Mode::AUTO_GRAB:
-			
-			break;
-		case Mode::AUTO_BACK:
-			goals.drive.left=-.6;
-			goals.drive.right=-.6;
-			break;
-		case Mode::AUTO_RELEASE:
+			goals.drive.left=.45;
+			goals.drive.right=.45;
 			break;	
 		default: assert(0);
 	}

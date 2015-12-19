@@ -10,7 +10,7 @@
 #include "../input/panel2015.h"
 
 struct Main{
-	#define MODES X(TELEOP) X(AUTO_MOVE) X(AUTO_GRAB) X(AUTO_BACK) X(AUTO_RELEASE)
+	#define MODES X(TELEOP) X(AUTO_MOVE) 
 	enum class Mode{
 		#define X(NAME) NAME,
 		MODES
