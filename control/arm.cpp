@@ -67,8 +67,8 @@ bool operator<(Arm::Input a,Arm::Input b){
 }
 
 Robot_inputs Arm::Input_reader::operator()(Robot_inputs a, Arm::Input i)const {
-	a.digital_io.in[TOP_LIMIT_DIO] = i.topLimit ? Digital_in::_1 : Digital_in::_0;
-	a.digital_io.in[BOTTOM_LIMIT_DIO] = i.bottomLimit ? Digital_in::_1 : Digital_in::_0;
+	a.digital_io.in[TOP_LIMIT_DIO] = i.topLimit ? Digital_in::_0 : Digital_in::_1;
+	a.digital_io.in[BOTTOM_LIMIT_DIO] = i.bottomLimit ? Digital_in::_0 : Digital_in::_1;
 	return a;
 }
 
